@@ -17,22 +17,81 @@
 
 <style>
     table {
-width: 65%;
+        width: 100%; /* Ensure the table takes up the full width */
+        table-layout: fixed; /* Fixed table layout to control column widths */
+        }
+
+    th {
+        height: 70px;
+        text-align: Center;
+    }
+
+    tr {
+        text-align: Center;
+    }
+
+    td {
+        height: 10px;
+        padding: 0; /* Removes default padding from table cells */
+        margin: 0; /* Removes default margin from table cells */
+    }
+
+    /* input {
+        width: 450px;
+        height: 40px;
+        margin: 0;
+
+    } */
+
+    /* account_no */
+
+    input[name^="account_no"] {
+    width: 200px; /* Adjusted to fit within the table cell */
+    height: 40px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-th {
-height: 70px;
-text-align: Center;
-}
+   /* Set the account title input width */
+    input[name^="accountTitle"] {
+        width: 520px; /* Adjusted to fit within the table cell */
+        height: 40px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 0;
+        box-sizing: border-box;
+    }
 
-tr {
-text-align: Center;
-}
+    /* Set the debit and credit input widths */
+    input[type="number"] {
+        width: 150px; /* Fixed width to ensure alignment without overlap */
+        height: 40px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 0;
+        box-sizing: border-box;
+        display: inline-block; /* Ensure inputs are inline without additional spacing */
+    }
 
-td {
-height: 10px;
-}
+    /* Optionally, set the widths of table columns to match your inputs */
+    td:nth-child(2) { /* Assuming this is the column for accountTitle */
+        width: 400px; /* Match the width of the accountTitle input */
+    }
 
+    td:nth-child(3), /* Assuming these are the columns for debit and credit */
+    td:nth-child(4) {
+        width: 150px; /* Match the width of the number inputs */
+    }
+
+    /* Optionally add this to ensure inputs align with each other */
+    input[type="number"] {
+        display: inline-block; /* Ensure inputs are inline without additional spacing */
+    }
+    
+    
+ 
 </style>
 <body>
 <form method="POST">
@@ -44,21 +103,22 @@ height: 10px;
                     </div>
                     {% endfor %}
                 </div>
-                
-                <div  class="container mt-3">
-                    <label for="TransactionDate" >Transaction Date</label><br>
+
+                <div class="container1">
+                    <label for="TransactionDate" >Transaction Date</label>
                         <input
                             type="date"
                             name="trans_date"
                             id="trans_date"
-                            required
+                            
                             >
-                        </input>  
-                        <br>
-                </div>
+                        </input> 
 
-                <div class="container mt-3">
-                    <label for="Journal" >Journal</label><br>
+                        
+                </div>
+                
+                <div class="container1">
+                    <label for="Journal" >Journal</label>
                     <select name="trasactionType" id="trasactionType"class="filter-selectbox"
                         required
                         >
@@ -69,47 +129,60 @@ height: 10px;
                             <option value="General">General</option>
 
                     
-                        </select>  <br>  
+                        </select>  
                 </div>
-
-                <div  class="container mt-3">
-                    <label >Reference</label><br>
-                        <input 
-                            type="text"
-                            name="reference"
-                            id="reference"
-                            style="width: 300px;"
-                            required
-                            >
-                        </input><br>
-
-                        
-                </div>
-
                 
 
-                <div  class="container mt-3">
-                    <label >Journal Memo</label><br>
-                        <textarea
-                            type="input"
-                            name="journal_memo" cols="35" rows="3"
-                            id="journal_memo" required
-                            >
-                        </textarea><br>
-                    
-                </div>
+                  <div class="container1">
+                    <label >Reference</label><br>
+                    <input 
+                        type="text"
+                        name="reference"
+                        id="reference"
+                        
+                        
+                        >
+                    </input>
 
+                </div>
+                
+                <div class="container1">
+
+                    <label >Journal Memo</label><br>
+                    <textarea
+                        type="input"
+                        name="journal_memo" cols="35" rows="3"
+                        id="journal_memo" required
+                        >
+                    </textarea>
+                    
+
+                </div>
+                     
+                    
+                    
+                
+                    
+
+                        
+
+                        
+
+                        
+
+                    
+
+    
             
                 <div class="container mt-3">
                     <table class="table table-borderless">
                         <thead class="border-bottom font-weight-bold">
                             <tr>
-                                <td></td>
+                                <td>Account Code</td>
                                 <td>AccounTitle</td>
                                 <td>Debit</td>
                                 <td>Credit</td>
-                                <td></td>
-                                <td></td>
+                                
 
 
                                 
@@ -170,81 +243,63 @@ height: 10px;
         
                         // Setting the Click Event Listener on the Submit Button
                         $(document).ready(function(){
-                            var maxField = 10; //Input fields increment limitation
-                            var addButton = $('#add_button'); //Add button selector
-                            var wrapper = $('#addrow'); //Input field wrapper
-                            var x = 0; //Initial field counter is 1
-                            
-                            //Once add button is clicked
-                            $(addButton).click(function(){
-                                //Check maximum number of input fields
-                                x++; //Increment field counter
-                                var fieldHTML = `<tr>
-                                <td>
-                                    <input type=text hidden name="account_no${x}"  id="account_no" 
-                                    style="width: 250px;"
-                                     />
-                                   
-                                </td>
+                                var maxField = 10; // Input fields increment limitation
+                                var addButton = $('#add_button'); // Add button selector
+                                var wrapper = $('#addrow'); // Input field wrapper
+                                var x = 0; // Initial field counter
 
-                                <td>
-                                    <input
-                                        type="text"
-                                        name="accountTitle${x}"
-                                        id="accountTitle${x}"
-                                        
-                                        onchange=myFunction2()
-                                        style="width: 450px;"
-                                        
-                                    >
-                                    </input
-                                    
-                                </td>
-        
-                                
-        
-                                <td>
-                                    <input
-                                        type="number"
-                                        name="amount${x}"
-                                        id="amount${x}"
-                                        class="amount"
-                                        step="0.01"
-                                        onchange=myFunction2()
-                                        style="width: 150px; height: 25px;"
-                                        
-                                    >
-                                    </input
-                                </td>
+                                // Once add button is clicked
+                                $(addButton).click(function(){
+                                    // Check maximum number of input fields
+                                    x++; // Increment field counter
+                                    var fieldHTML = `
+                                        <tr>
+                                            <td style="padding: 0; margin: 0;">
+                                                <input type="text" 
+                                                name="account_no${x}" 
+                                                id="account_no${x}" />
+                                            </td>
+                                            <td style="padding: 0; margin: 0;">
+                                                <input
+                                                    type="text"
+                                                    name="accountTitle${x}"
+                                                    id="accountTitle${x}"
+                                                    onchange="myFunction2()"
+                                                    
+                                                />
+                                            </td>
+                                            <td style="padding: 0; margin: 0;">
+                                                <input
+                                                    type="number"
+                                                    name="amount${x}"
+                                                    id="amount${x}"
+                                                    class="amount"
+                                                    step="0.01"
+                                                    onchange="myFunction2()"
+                                                    
+                                                />
+                                            </td>
+                                            <td style="padding: 0; margin: 0;">
+                                                <input
+                                                    type="number"
+                                                    name="credit_amount${x}"
+                                                    id="credit_amount${x}"
+                                                    class="credit_amount"
+                                                    step="0.01"
+                                                    onchange="myFunction2()"
+                                                    
+                                                />
+                                            </td>
+                                            <td style="padding: 0; margin: 0;">
+                                                <button type="button" id="remove_button" class="btn btn-danger">
+                                                    <i class="fas fa-database"></i> Remove
+                                                </button>
+                                            </td>
+                                        </tr>`; // New input field HTML
 
-                                <td>
-                                    <input
-                                        type="number"
-                                        name="credit_amount${x}"
-                                        id="credit_amount${x}"
-                                        class="credit_amount"
-                                        step="0.01"
-                                        onchange=myFunction2()
-                                        style="width: 150px; height: 25px;"
-                                        
-                                    >
-                                    </input
-                                </td>
+                                    $(wrapper).append(fieldHTML); // Add field HTML
+                                });
 
-                               
-        
-                                <td>
-                                    <button type="button"  id="remove_button" class="btn btn-danger"><i class="fas fa-database">
-                                    </i>Remove</button>
-                                </td>
-
-                               
-
-                                </tr> `; //New input field html 
-                                $(wrapper).append(fieldHTML); //Add field html
-                                
-                            });
-                            
                             //Once remove button is clicked
                             $(wrapper).on('click', '#remove_button', function(e){
                                 e.preventDefault();

@@ -84,38 +84,62 @@ body{
 }
 
 /* Purchase Order */
-.container1 label {
-    flex-basis: 100px;
-    text-align: right;
-    margin-right: 10px;
-    }
+
 
     
+/* .container1 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 50%;
+    } */
+
+
 .container1 {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    width: 50%; /* Takes up 50% of the screen width */
+    box-sizing: border-box; /* Ensures padding and borders are included in width calculation */
+}
+
+.container1 label {
+    flex-basis: 100px;
+    text-align: right;
+    margin-right: 10px;
+    margin-left: 100px;
     }
 
-
-.container1 input {
-    flex-grow: 1;
-    width: 30%;
-    height: 50px;
-    }
-
-.container1 select {
-    flex-grow: 1;
-    width: 30%;
-    height: 50px;
-    }
-
+/* Ensure child elements adjust within the container */
+.container1 input,
+.container1 select,
 .container1 textarea {
-    flex-grow: 1;
-    width: 30%;
-    height: 85px;
-    }
+    box-sizing: border-box; /* Ensures padding and borders are included in width calculation */
+}
 
+
+/* Input styling */
+.container1 input {
+    flex-grow: 1; /* Allows the input to expand */
+    width: 100%; /* Adjusts to the full width of the container */
+    height: 50px;
+    margin-right: 5px; /* Add some spacing if needed */
+}
+
+/* Select styling */
+.container1 select {
+    flex-grow: 1; /* Allows the select to expand */
+    width: 100%; /* Adjusts to the full width of the container */
+    height: 50px;
+    margin-right: 5px; /* Add some spacing if needed */
+}
+
+/* Textarea styling */
+.container1 textarea {
+    flex-grow: 1; /* Allows the textarea to expand */
+    width: 100%; /* Adjusts to the full width of the container */
+    height: 85px;
+}
 
 
 

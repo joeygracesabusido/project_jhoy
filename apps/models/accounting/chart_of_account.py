@@ -15,22 +15,24 @@ from database.databases import connectionDB
 
 from datetime import date, datetime, timezone
 
+from apps.models.accounting.account_type import AccountType
+
 engine = connectionDB.conn()
 
 
-class User(SQLModel, table=True):
+class ChartofAccount(SQLModel, table=True):
     """This is to create user Table"""
-    __tablename__ = 'user'
+    __tablename__ = 'chart_of_account'
     id: Optional[int] = Field(default=None, primary_key=True)
-    username: str = Field(index=True, unique=True)
-    hashed_password: str = Field(nullable=False)
-    email_add: str = Field(nullable=False)
-    full_name: str = Field(max_length=70, default=None)
-    role: str = Field(max_length=70, default=None)
-    is_active: bool = Field(default=False)
+    chart_of_account: str = Field(index=True, unique=True)
+    accoun_type_id: Optional[int] = Field(default=None, foreign_key="AccountType.id")
+    description: str = Field(default = None, max_lenght=200)
+    user: str = Field(default = None)
     date_updated: Optional[datetime] = Field(default=None)
     date_created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    __table_args__ = (Index("idx_user_unique", "username", unique=True),)
+   
+
+    __table_args__ = (Index("idx_account_type", "chart_of_account", unique=True),)
 
 
 
@@ -40,4 +42,4 @@ def create_db_and_tables():
     
     SQLModel.metadata.create_all(engine)
 
-# create_db_and_tables()
+create_db_and_tables()

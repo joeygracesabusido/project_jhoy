@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory="apps/templates")
 
 @api_accounting_temp.get("/api-accounting-temp/", response_class=HTMLResponse)
 async def api_ticketing(request: Request):
-    return templates.TemplateResponse("accounting/accounting.html", {"request": request})
+    return templates.TemplateResponse("accounting/insert_journal_entry.html", {"request": request})
 
 
 @api_accounting_temp.post("/insert-journal-entry/", response_class=HTMLResponse)
