@@ -24,6 +24,7 @@ class ChartofAccount(SQLModel, table=True):
     """This is to create user Table"""
     __tablename__ = 'chart_of_account'
     id: Optional[int] = Field(default=None, primary_key=True)
+    chart_of_account_code = str(index=True, unique=True)
     chart_of_account: str = Field(index=True, unique=True)
     accoun_type_id: Optional[int] = Field(default=None, foreign_key="AccountType.id")
     description: str = Field(default = None, max_lenght=200)
@@ -33,7 +34,7 @@ class ChartofAccount(SQLModel, table=True):
    
 
     __table_args__ = (Index("idx_account_type", "chart_of_account", unique=True),)
-
+    __table_args__ = (Index("idx_chart_of_account_code", "chart_of_account_code", unique=True),)
 
 
 

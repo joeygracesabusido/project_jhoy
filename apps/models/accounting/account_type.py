@@ -11,7 +11,7 @@ parent_dir = os.path.join(current_dir, '..')
 sys.path.append(parent_dir)
 
 
-from database.databases import connectionDB
+from apps.database.databases import connectionDB
 
 from datetime import date, datetime
 

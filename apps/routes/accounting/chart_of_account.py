@@ -11,8 +11,8 @@ from pymongo import  DESCENDING
 
 from datetime import datetime, timedelta, date
 from apps.authentication.authenticate_user import get_current_user
-from apps.base_model.type_of_account_bm import AccountTypeBM
-from apps.views.accounting.account_type_views import TypeofAccountViews
+from apps.base_model.chart_of_account_bm import ChartofAccountBM
+from apps.views.accounting.chart_of_account_views import ChartofAccountViews
 
 
 
@@ -20,12 +20,12 @@ api_chart_of_account = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
 
-@api_chart_of_account.post('/api-insert-account-type')
-async def insert_account_type(items:AccountTypeBM, username: str = Depends(get_current_user)):
+@api_chart_of_account.post('/api-insert-chart-of-account/')
+async def insert_account_type(items:ChartofAccountBM, username: str = Depends(get_current_user)):
 
     
     try:
-        TypeofAccountViews.insert_type_of_account(items)
+        ChartofAccountViews.insert_chart_of_account(items)
         return {"message": "Account type added successfully"}
     
     except Exception as e:

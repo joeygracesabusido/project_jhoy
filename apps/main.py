@@ -21,6 +21,9 @@ from apps.routes.purchase_order_temp import api_purchase_ord_temp
 from apps.routes.purchase_order import api_purchase_order
 
 
+from apps.routes.accounting.insert_account_type import api_chart_of_account
+
+
 from apps.routes.accounting.accounting_templ import api_accounting_temp
 
 from fastapi.staticfiles import StaticFiles
@@ -53,6 +56,8 @@ app.include_router(api_purchase_order, tags=['Purchase Order'])
 
 
 app.include_router(api_accounting_temp)
+
+app.include_router(api_chart_of_account, tags=['Type of Account'])
 
 
 # Mount Strawberry's GraphQL app onto FastAPI
