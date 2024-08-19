@@ -65,7 +65,7 @@
     }
 
     /* Set the debit and credit input widths */
-    input[type="number"] {
+    input[name^="amount"], input[name^="credit_amount"] {
         width: 150px; /* Fixed width to ensure alignment without overlap */
         height: 40px;
         border: 1px solid #ccc;
@@ -73,6 +73,7 @@
         margin: 0;
         box-sizing: border-box;
         display: inline-block; /* Ensure inputs are inline without additional spacing */
+        text-align: right; /* Align the text inside the input fields to the right */
     }
 
     /* Optionally, set the widths of table columns to match your inputs */
@@ -105,7 +106,7 @@
                 </div>
 
                 <div class="container1">
-                    <label for="TransactionDate" >Transaction Date</label>
+                    <label for="TransactionDate" >Date</label>
                         <input
                             type="date"
                             name="trans_date"
@@ -218,159 +219,229 @@
 
                         <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
                         <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-
                         
+<script>
+   $(document).ready(function () {
+    var maxField = 10; // Input fields increment limitation
+    var addButton = $('#add_button'); // Add button selector
+    var wrapper = $('#addrow'); // Input field wrapper
+    var x = 0; // Initial field counter
+
+    // Function to format number with thousand separator
+    function formatNumberWithSeparator(value) {
+        return parseFloat(value).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    // Function to remove thousand separators and convert back to a number
+    function parseFormattedNumber(value) {
+        return value.replace(/,/g, '');
+    }
+
+
+    
+
+    // Once add button is clicked
+    $(addButton).click(function () {
+        // Check maximum number of input fields
+        x++; // Increment field counter
+        var fieldHTML = `
+            <tr>
+                <td style="padding: 0; margin: 0;">
+                    <input type="text" 
+                    name="account_no${x}" 
+                    id="account_no${x}" />
+                </td>
+                <td style="padding: 0; margin: 0;">
+                    <input
+                        type="text"
+                        name="accountTitle${x}"
+                        id="accountTitle${x}"
+                        onchange="myFunction2()"
+                    />
+                </td>
+                <td style="padding: 0; margin: 0;">
+                    <input
+                        type="text"
+                        name="amount${x}"
+                        id="amount${x}"
+                        class="amount"
+                        step="0.01"
+                    />
+                </td>
+                <td style="padding: 0; margin: 0;">
+                    <input
+                        type="text"
+                        name="credit_amount${x}"
+                        id="credit_amount${x}"
+                        class="credit_amount"
+                        step="0.01"
+                    />
+                </td>
+                <td style="padding: 0; margin: 0;">
+                    <button type="button" id="remove_button" class="btn btn-danger">
+                        <i class="fas fa-database"></i> Remove
+                    </button>
+                </td>
+            </tr>`; // New input field HTML
+
+        $(wrapper).append(fieldHTML); // Add field HTML
+    });
+
+    // Event delegation for input blur to handle formatting
+    $(document).on('blur', 'input[name^="amount"], input[name^="credit_amount"]', function () {
+        let input = $(this);
+        let inputValue = input.val().trim();
+        if (inputValue !== '' && !isNaN(inputValue)) {
+            input.val(formatNumberWithSeparator(parseFormattedNumber(inputValue)));
+        }
+        myFunction2();
+    });
+
+    // Event delegation for input focus to handle formatting
+    $(document).on('focus', 'input[name^="amount"], input[name^="credit_amount"]', function () {
+        let input = $(this);
+        let inputValue = input.val().trim();
+        input.val(parseFormattedNumber(inputValue)); // Remove formatting for editing
+        myFunction2();
+    });
+
+    // Once remove button is clicked
+    $(wrapper).on('click', '#remove_button', function (e) {
+        e.preventDefault();
+        $(this).closest('tr').remove(); // Remove field HTML 
+        myFunction2();
+        x--; // Decrement field counter
+    });
+
+    // This is for autocomplete of account title (if needed)
+    // $(document).on('focus', `[id^="accountTitle"]`, function () {
+    //     $(this).autocomplete({
+    //         source: "/autocomplete/"
+    //     });
+    // });
+});
+
+
+</script>
 
         
-                        <script  type="text/javascript">
-        
-                        function getCookie(name) {
-                            let cookieValue = null;
-                            if (document.cookie && document.cookie !== '') {
-                                const cookies = document.cookie.split(';');
-                                for (let i = 0; i < cookies.length; i++) {
-                                    const cookie = cookies[i].trim();
-                                    // Does this cookie string begin with the name we want?
-                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                        break;
-                                    }
-                                }
-                            }
-                            return cookieValue;
-                        }
-                        const csrftoken = getCookie('csrftoken');
-        
-                        // Setting the Click Event Listener on the Submit Button
-                        $(document).ready(function(){
-                                var maxField = 10; // Input fields increment limitation
-                                var addButton = $('#add_button'); // Add button selector
-                                var wrapper = $('#addrow'); // Input field wrapper
-                                var x = 0; // Initial field counter
-
-                                // Once add button is clicked
-                                $(addButton).click(function(){
-                                    // Check maximum number of input fields
-                                    x++; // Increment field counter
-                                    var fieldHTML = `
-                                        <tr>
-                                            <td style="padding: 0; margin: 0;">
-                                                <input type="text" 
-                                                name="account_no${x}" 
-                                                id="account_no${x}" />
-                                            </td>
-                                            <td style="padding: 0; margin: 0;">
-                                                <input
-                                                    type="text"
-                                                    name="accountTitle${x}"
-                                                    id="accountTitle${x}"
-                                                    onchange="myFunction2()"
-                                                    
-                                                />
-                                            </td>
-                                            <td style="padding: 0; margin: 0;">
-                                                <input
-                                                    type="number"
-                                                    name="amount${x}"
-                                                    id="amount${x}"
-                                                    class="amount"
-                                                    step="0.01"
-                                                    onchange="myFunction2()"
-                                                    
-                                                />
-                                            </td>
-                                            <td style="padding: 0; margin: 0;">
-                                                <input
-                                                    type="number"
-                                                    name="credit_amount${x}"
-                                                    id="credit_amount${x}"
-                                                    class="credit_amount"
-                                                    step="0.01"
-                                                    onchange="myFunction2()"
-                                                    
-                                                />
-                                            </td>
-                                            <td style="padding: 0; margin: 0;">
-                                                <button type="button" id="remove_button" class="btn btn-danger">
-                                                    <i class="fas fa-database"></i> Remove
-                                                </button>
-                                            </td>
-                                        </tr>`; // New input field HTML
-
-                                    $(wrapper).append(fieldHTML); // Add field HTML
-                                });
-
-                            //Once remove button is clicked
-                            $(wrapper).on('click', '#remove_button', function(e){
-                                e.preventDefault();
-                                $(this).closest('tr').remove(); //Remove field html 
-                                myFunction2();
-                                x--; //Decrement field counter
-                            });
-                            // this is for autocomplete of account title
-                            $(document).on('focus', `[id^="accountTitle"]`, function() {
-                                $(this).autocomplete({
-                                source: "/autocomplete/"
-                                });
-                               
-                            });
-                        });
-        
-                        </script>
+ 
         
                         <script type="text/javascript">
-                            function myFunction2() {
-                            document.querySelector("#submiBTN").disabled = true;
-                                var total = 0.0;
-                                // let debitList = document.querySelector('input.amount');
-                                let debitList = document.getElementsByClassName('amount');
-                                let debitsum = 0;
+                      function myFunction2() {
+    document.querySelector("#submiBTN").disabled = true;
+    
+    var total = 0.0;
+    let debitsum = 0;
+    let creditsum = 0;
+
+    // Process amount fields
+    let debitList = document.getElementsByClassName('amount');
+    for (let i of debitList) {
+        let debitValue = parseFloat(parseFormattedNumber(i.value));
+        if (!isNaN(debitValue)) {
+            debitsum += debitValue;
+        }
+    }
+    let debitsum2 = parseFloat(debitsum).toFixed(2);
+    
+    // Process credit_amount fields
+    let creditList = document.getElementsByClassName('credit_amount');
+    for (let i of creditList) {
+        let creditValue = parseFloat(parseFormattedNumber(i.value));
+        if (!isNaN(creditValue)) {
+            creditsum += creditValue;
+        }
+    }
+    let creditsum2 = parseFloat(creditsum).toFixed(2);
+
+    // Calculate total
+    total = parseFloat(debitsum2) - parseFloat(creditsum2);
+
+    // Enable or disable the submit button based on the total
+    if (total === 0) {
+        document.getElementById("submiBTN").disabled = false;
+    } else {
+        document.getElementById("submiBTN").disabled = true;
+    }
+}
+
+
+// Function to format number with thousand separator
+function formatNumberWithSeparator(value) {
+    return parseFloat(value).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// Function to remove thousand separators and convert back to a number
+function parseFormattedNumber(value) {
+    return value.replace(/,/g, '');
+}
+
+
+                            // function myFunction2() {
+                            // document.querySelector("#submiBTN").disabled = true;
+                            //     var total = 0.0;
+                            //     // let debitList = document.querySelector('input.amount');
+                            //     let debitList = document.getElementsByClassName('amount');
+                            //     let debitsum = 0;
                                
                                 
-                                for (let i of debitList){
-                                    // console.log(i.value)
-                                    let debitValue = parseFloat(i.value);
+                            //     for (let i of debitList){
+                            //         // console.log(i.value)
+                            //         let debitValue = parseFloat(i.value);
                                     
-                                    debitsum += debitValue;
-                                    debitsum2 = parseFloat(debitsum).toFixed(2)
-                                }
+                            //         debitsum += debitValue;
+                            //         debitsum2 = parseFloat(debitsum).toFixed(2)
+                            //     }
                                 
 
 
-                                let creditList = document.getElementsByClassName('credit_amount');
-                                let creditsum = 0;
+                            //     let creditList = document.getElementsByClassName('credit_amount');
+                            //     let creditsum = 0;
                                 
 
-                                for (let i of creditList){
-                                    let creditValue = parseFloat(i.value);
-                                    creditsum += creditValue;
-                                    creditsum2 = parseFloat(creditsum).toFixed(2)
-                                }
+                            //     for (let i of creditList){
+                            //         let creditValue = parseFloat(i.value);
+                            //         creditsum += creditValue;
+                            //         creditsum2 = parseFloat(creditsum).toFixed(2)
+                            //     }
                                
-                                total = parseFloat(debitsum2) - parseFloat(creditsum2)
+                            //     total = parseFloat(debitsum2) - parseFloat(creditsum2)
 
-                                if (total === 0){
-                                    document.getElementById("submiBTN").disabled = false;
-                                }else{
-                                    document.getElementById("submiBTN").disabled = true;
-                                }
+                            //     if (total === 0){
+                            //         document.getElementById("submiBTN").disabled = false;
+                            //     }else{
+                            //         document.getElementById("submiBTN").disabled = true;
+                            //     }
                             
-                            }
+                            // }
                                 
                         
                         </script>
+
+
+                      
 
                         <script>
 
-                            $( function() {
+                            // $( function() {
                                 
-                                $("#account_no").autocomplete({
-                                source: "/autocomplete/"
-                                });
-                            } );
+                            //     $("#account_no").autocomplete({
+                            //     source: "/autocomplete/"
+                            //     });
+                            // } );
 
 
                         </script>
+
+
+                        
 
                        
 
@@ -390,7 +461,7 @@
     
     
     
-    <script src="/static/payroll/update_payroll.js"></script>
+    <!-- <script src="/static/payroll/update_payroll.js"></script> -->
     
     
     
