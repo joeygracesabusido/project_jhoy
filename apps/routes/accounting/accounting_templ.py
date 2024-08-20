@@ -35,6 +35,7 @@ async def insert_journal_entry(request: Request):
 
     date_time_obj_to = datetime.strptime(trans_date, '%Y-%m-%d')
 
+    account_code_id = []
     account_title =[]
     debitAmount = []
     craditAmount =[]
@@ -44,6 +45,7 @@ async def insert_journal_entry(request: Request):
         account_title.append(form.get(f'accountTitle{index}'))
         debitAmount.append(form.get(f'amount{index}'))
         craditAmount.append(form.get(f'credit_amount{index}'))
+        account_code_id.append(form.get(f'chart_of_account_id{index}'))
         index+=1
         
 
@@ -66,6 +68,12 @@ async def insert_journal_entry(request: Request):
     for val in craditAmount:
         if val != None :
             res3.append(val)
+
+    res4 = []
+   
+    for val in account_code_id:
+        if val != None :
+            res4.append(val)
             
    
     data= {}
@@ -73,7 +81,8 @@ async def insert_journal_entry(request: Request):
     data.update({
         "accountTitle":res,
         "debit":res2,
-        "credit":res3
+        "credit":res3,
+        "account_code_id":res4
     })
 
     entry = len(data['accountTitle'])
@@ -93,12 +102,17 @@ async def insert_journal_entry(request: Request):
             if j == 2:   
                 d['credit']= (k[1][i])
 
+            if j == 3:   
+                d['account_code_id']= (k[1][i])
+            
+
         result.append(d)
     # print(result)
     
     totalD = 0
     totalC = 0
     accountTitle2 = ''
+    account_code_id= ''
     debit2 = 0
     credit2 = 0
     totalAmount = 0
@@ -107,6 +121,7 @@ async def insert_journal_entry(request: Request):
        
         
         accountTitle2 = r['accountTitle']
+        account_code_id = r['account_code_id']
         debit2 = r['debit']
         credit2 = r['credit']
         totalD += float(debit2)
@@ -121,6 +136,7 @@ async def insert_journal_entry(request: Request):
            
         
             accountTitle2 = r['accountTitle']
+            account_code_id = r['account_code_id']
             debit2 = r['debit']
             credit2 = r['credit']
             totalD += float(debit2)
@@ -128,59 +144,31 @@ async def insert_journal_entry(request: Request):
 
             try:
 
-                token = request.cookies.get('access_token')
+                
+                                           
 
-                all_chart_of_account = chartofAccounts(mydb.chart_of_account.find().sort('accountTitle', 1))
-                if token is None:
-
-                    messeges.append("Please log in first to validated credentials ")
-                    return templates.TemplateResponse("journal_entry_zamboanga2.html", 
-                                                            {"request":request,'all_chart_of_account':all_chart_of_account,
-                                                            "messeges":messeges})
-
+                dataInsert = [{
                     
-                else:
-                    scheme, _, param = token.partition(" ")
-                    payload = jwt.decode(param, JWT_SECRET, algorithms=ALGORITHM)
-                
-                    username = payload.get("sub")
-                
-
-                    user =  mydb.login.find({"username":username})
-
-                    if user is not None:
-                        items = chartofAccounts(mydb.chart_of_account.find({'accountTitle':accountTitle2}))
-                        for i in items:
-                            accountNumber = i['accountNum']
-                            bsType = i['bsClass']
-
-                            
-
-                            dataInsert = [{
-                                
-                                'date_entry': date_time_obj_to,
-                                'journal': journal,
-                                'ref': reference,
-                                'descriptions': journal_memo,
-                                'acoount_number': accountNumber,
-                                'account_disc': accountTitle2,
-                                'bsClass': bsType,
-                                'debit_amount': float(debit2),
-                                'credit_amount': float(credit2),
-                                'due_date_apv': "",
-                                'terms_days': "",
-                                'supplier/Client': "",
-                                'user': username,
-                                'created':datetime.now()
-                                
-                                }]
+                    'date_entry': date_time_obj_to,
+                    'journal': journal,
+                    'ref': reference,
+                    'descriptions': journal_memo,
+                    'account_code': account_code2,
+                   
+                   
+                    'debit_amount': float(debit2),
+                    'credit_amount': float(credit2),
+                    
+                    'user': username,
+                    'created':datetime.now()
+                    
+                    }]
 
                             
                                 
-                            # print(dataInsert)
-
                             
-                            mydb.journal_entry_zambo.insert_many(dataInsert)
+                            
+                           
 
                     
             

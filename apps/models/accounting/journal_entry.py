@@ -15,26 +15,29 @@ from apps.database.databases import connectionDB
 
 from datetime import date, datetime, timezone
 
-from apps.models.accounting.account_type import AccountType
+from apps.models.accounting.chart_of_account import ChartofAccount
 
 engine = connectionDB.conn()
 
 
-class ChartofAccount(SQLModel, table=True):
+class JournalEntry(SQLModel, table=True):
     """This is to create user Table"""
-    __tablename__ = 'chart_of_account'
+    __tablename__ = 'journal_entry'
     id: Optional[int] = Field(default=None, primary_key=True)
-    chart_of_account_code: str = Field(index=True, unique=True)
-    chart_of_account: str = Field(index=True, unique=True)
-    accoun_type_id: Optional[int] = Field(default=None, foreign_key="account_type.id")
+    transdate: date = Field(default=None)
+    journal_type: str = Field(default = None)
+    reference: str = Field(default = None)
     description: str = Field(default = None)
+    account_code_id: Optional[int] = Field(default=None, foreign_key="chart_of_account.id")
+    debit: float = Field(default = 0)
+    credit: float = Field(default = 0)
     user: str = Field(default = None)
     date_updated: Optional[datetime] = Field(default=None)
     date_created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
    
 
-    __table_args__ = (Index("idx_account_type", "chart_of_account", unique=True),)
-    __table_args__ = (Index("idx_chart_of_account_code", "chart_of_account_code", unique=True),)
+    # __table_args__ = (Index("idx_account_type", "chart_of_account", unique=True),)
+    # __table_args__ = (Index("idx_chart_of_account_code", "chart_of_account_code", unique=True),)
 
 
 

@@ -16,11 +16,11 @@ from apps.views.accounting.account_type_views import TypeofAccountViews
 
 
 
-api_chart_of_account = APIRouter()
+api_account_type = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
 
-@api_chart_of_account.post('/api-insert-account-type')
+@api_account_type.post('/api-insert-account-type')
 async def insert_account_type(items:AccountTypeBM, username: str = Depends(get_current_user)):
 
     
