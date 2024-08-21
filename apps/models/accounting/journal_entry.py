@@ -21,13 +21,15 @@ engine = connectionDB.conn()
 
 
 class JournalEntry(SQLModel, table=True):
-    """This is to create user Table"""
+    """This is to  Table"""
     __tablename__ = 'journal_entry'
     id: Optional[int] = Field(default=None, primary_key=True)
     transdate: date = Field(default=None)
     journal_type: str = Field(default = None)
     reference: str = Field(default = None)
     description: str = Field(default = None)
+    chart_of_account_code: str = Field(default = None)
+    chart_of_account: str = Field(default = None)
     account_code_id: Optional[int] = Field(default=None, foreign_key="chart_of_account.id")
     debit: float = Field(default = 0)
     credit: float = Field(default = 0)
@@ -46,4 +48,4 @@ def create_db_and_tables():
     
     SQLModel.metadata.create_all(engine)
 
-create_db_and_tables()
+# create_db_and_tables()

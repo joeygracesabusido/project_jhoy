@@ -13,6 +13,8 @@ from bson import ObjectId
 
 from ...authentication.authenticate_user import get_current_user
 
+from apps.views.accounting.journal_entry_views import JournalEntryViews
+
 api_accounting_temp= APIRouter(include_in_schema=False)
 templates = Jinja2Templates(directory="apps/templates")
 
@@ -21,181 +23,84 @@ templates = Jinja2Templates(directory="apps/templates")
 async def api_ticketing(request: Request):
     return templates.TemplateResponse("accounting/insert_journal_entry.html", {"request": request})
 
+@api_accounting_temp.get("/api-journal-entry-list-temp/", response_class=HTMLResponse)
+async def api_ticketing(request: Request):
+    return templates.TemplateResponse("accounting/journal_entry_list.html", {"request": request})
 
-@api_accounting_temp.post("/insert-journal-entry/", response_class=HTMLResponse)
-async def insert_journal_entry(request: Request):
-    """This function is for posting accounting"""
+
+
+
+@api_accounting_temp.post("/api-accounting-temp/", response_class=HTMLResponse)
+async def insert_journal_entry(request: Request,username: str = Depends(get_current_user)):
+    """This function is for posting accounting entries."""
     form = await request.form()
 
     trans_date = form.get('trans_date')
-    journal = form.get('trasactionType')
+    journal_type = form.get('journal_type')
     reference = form.get('reference')
-    journal_memo = form.get('journal_memo')
+    description = form.get('description')
+
     
-
-    date_time_obj_to = datetime.strptime(trans_date, '%Y-%m-%d')
-
-    account_code_id = []
-    account_title =[]
+    account_title = []
     debitAmount = []
-    craditAmount =[]
+    creditAmount = []
+    account_code_id = []
+    account_code = []
     index = 1
 
-    while form.get(f'accountTitle{index}')!= None:
+    while form.get(f'accountTitle{index}') is not None:
         account_title.append(form.get(f'accountTitle{index}'))
         debitAmount.append(form.get(f'amount{index}'))
-        craditAmount.append(form.get(f'credit_amount{index}'))
+        creditAmount.append(form.get(f'credit_amount{index}'))
         account_code_id.append(form.get(f'chart_of_account_id{index}'))
-        index+=1
-        
+        account_code.append(form.get(f'account_code{index}'))
+        index += 1
 
-    
-    res = []
-    
-    for val in account_title:
-        if val != None :
-            res.append(val)
-
-
-    res2 = []
-   
-    for val in debitAmount:
-        if val != None :
-            res2.append(val)
-
-    res3 = []
-   
-    for val in craditAmount:
-        if val != None :
-            res3.append(val)
-
-    res4 = []
-   
-    for val in account_code_id:
-        if val != None :
-            res4.append(val)
-            
-   
-    data= {}
-
-    data.update({
-        "accountTitle":res,
-        "debit":res2,
-        "credit":res3,
-        "account_code_id":res4
-    })
-
-    entry = len(data['accountTitle'])
-   
-
-    result = []
-    for i in range(entry):
-        # print(i)
-        d={}
-        for j,k in enumerate(data.items()):
-            if j == 0:
-                d['accountTitle']= (k[1][i])
-
-            if j == 1:
-                d['debit']= (k[1][i])
-               
-            if j == 2:   
-                d['credit']= (k[1][i])
-
-            if j == 3:   
-                d['account_code_id']= (k[1][i])
-            
-
-        result.append(d)
-    # print(result)
-    
+    # Prepare the data for insertion
     totalD = 0
     totalC = 0
-    accountTitle2 = ''
-    account_code_id= ''
-    debit2 = 0
-    credit2 = 0
-    totalAmount = 0
-    messeges = []
-    for r in result:
-       
-        
-        accountTitle2 = r['accountTitle']
-        account_code_id = r['account_code_id']
-        debit2 = r['debit']
-        credit2 = r['credit']
-        totalD += float(debit2)
-        totalC += float(credit2)
-        total_debit = '{:.2f}'.format(totalD)
-        total_credit = '{:.2f}'.format(totalC)
+    result = []
 
-    totalAmount = float(total_debit)-float(total_credit)
+    for i in range(len(account_title)):
+        debit2 = float(debitAmount[i].replace(',', '')) if debitAmount[i] else 0
+        credit2 = float(creditAmount[i].replace(',', '')) if creditAmount[i] else 0
+        totalD += debit2
+        totalC += credit2
+        result.append({
+            "transdate": trans_date, 
+            "journal_type": journal_type,
+            "reference": reference,
+            "reference": reference,
+            "description": description, 
+            "chart_of_account": account_title[i],
+            "account_code_id": account_code_id[i],
+            "chart_of_account_code": account_code[i],
+            "debit": debit2,
+            "credit": credit2,
+            "user": username
+            
+          
+        })
+
+    totalAmount = totalD - totalC
+
+
+    # print(result)
+
     if totalAmount == 0:
-   
-        for r in result:
-           
-        
-            accountTitle2 = r['accountTitle']
-            account_code_id = r['account_code_id']
-            debit2 = r['debit']
-            credit2 = r['credit']
-            totalD += float(debit2)
-            totalC += float(credit2)
-
+        for entry in result:
             try:
-
-                
-                                           
-
-                dataInsert = [{
-                    
-                    'date_entry': date_time_obj_to,
-                    'journal': journal,
-                    'ref': reference,
-                    'descriptions': journal_memo,
-                    'account_code': account_code2,
-                   
-                   
-                    'debit_amount': float(debit2),
-                    'credit_amount': float(credit2),
-                    
-                    'user': username,
-                    'created':datetime.now()
-                    
-                    }]
-
-                            
-                                
-                            
-                            
-                           
-
-                    
-            
+                # Insert the entry into the database
+                JournalEntryViews.insert_journal_entry(**entry)
             except Exception as e:
-                messeges.append(e)
-                return templates.TemplateResponse("journal_entry_zamboanga2.html", 
-                                                        {"request":request,'all_chart_of_account':all_chart_of_account,
-                                                        "messeges":messeges})
+                messeges = [str(e)]
+                return templates.TemplateResponse("accounting/insert_journal_entry.html", 
+                                                  {"request": request, "messeges": messeges})
+
+        messeges = ["Data has been saved"]
     else:
-        messeges.append("Debit and Credit Not Balance")
-        all_chart_of_account = chartofAccounts(mydb.chart_of_account.find().sort('accountTitle', 1))
-        return templates.TemplateResponse("journal_entry_zamboanga2.html", 
-                                            {"request":request,"all_chart_of_account":all_chart_of_account,
-                                            "messeges":messeges})
+        messeges = ["Debit and Credit Not Balanced"]
 
-
-    
-
-            
-   
-
-    messeges.append("Data has been save")
-    all_chart_of_account = chartofAccounts(mydb.chart_of_account.find().sort('accountTitle', 1))
-    return templates.TemplateResponse("journal_entry.html", 
-                                        {"request":request,"all_chart_of_account":all_chart_of_account,
-                                        "messeges":messeges})
-
-
-
+    return templates.TemplateResponse("accounting/insert_journal_entry.html", 
+                                      {"request": request, "messeges": messeges})
 

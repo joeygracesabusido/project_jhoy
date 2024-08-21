@@ -1,27 +1,25 @@
 from sqlmodel import Field, Session,  create_engine,select,func,funcfilter,within_group,Relationship,Index
 
-from apps.models.accounting.chart_of_account import ChartofAccount
+from apps.models.accounting.journal_entry import JournalEntry
 from apps.database.databases import connectionDB
 from typing import Optional
 from datetime import date, datetime
 
 
-from apps.base_model.chart_of_account_bm import ChartofAccountBM
+from apps.base_model.journal_entry_bm import JournalEntryBM
 
 engine = connectionDB.conn()
 
 
-class ChartofAccountViews(): # this class is for Type of Account
+class JournalEntryViews(): # this class is for Type of Account
 
     @staticmethod
-    def insert_chart_of_account(item: ChartofAccountBM,username: str): # this is for inserting type of Account 
+    def insert_journal_entry(**kwargs): # this is for inserting type of Account 
         
-         # Create a dictionary from the item
-        item_data = item.dict()  # Assuming item is a Pydantic model
-        item_data['user'] = username  # Insert the username
         
-        # Create an instance of Journal Entry using ** unpacking
-        insertData = ChartofAccount(**item_data)
+
+        # Create an instance of JournalEntry using ** unpacking
+        insertData = JournalEntry(**kwargs)
         
 
         session = Session(engine)
@@ -33,10 +31,10 @@ class ChartofAccountViews(): # this class is for Type of Account
         session.close()
 
     @staticmethod
-    def get_chart_of_account(): # this function is to get a list of type of account
+    def get_journal_entry(): # this function is to get a list of type of account
         with Session(engine) as session:
             try:
-                statement = select(ChartofAccount).order_by(ChartofAccount.chart_of_account_code)
+                statement = select(JournalEntry)
 
                
                             

@@ -23,10 +23,16 @@ $(document).ready(function () {
         x++; // Increment field counter
         var fieldHTML = `
             <tr>
+
+                
+
                 <td style="padding: 0; margin: 0;">
                     <input type="text" 
                     name="account_code${x}" 
-                    id="account_code${x}" />
+                    id="account_code${x}"
+                    class="account_code"
+                    step="0.01"
+                     />
                 </td>
                 <td style="padding: 0; margin: 0;">
                     <input
@@ -54,6 +60,18 @@ $(document).ready(function () {
                         step="0.01"
                     />
                 </td>
+
+                 <td style="padding: 0; margin: 0;">
+                    <input
+                        type="text"
+                        name="chart_of_account_id${x}"
+                        id="chart_of_account_id${x}"
+                        class="chart_of_account_id"
+                        step="0.01"
+
+                        hidden
+                    />
+                </td>
                 
                 
                 <td style="padding: 0; margin: 0;">
@@ -62,16 +80,9 @@ $(document).ready(function () {
                     </button>
                 </td>
 
-                <td style="padding: 0; margin: 0;">
-                    <input
-                        type="text"
-                        name="chart_of_account_id{x}"
-                        id="chart_of_account_id${x}"
-                        class="chart_of_account_id"
-                        step="0.01"
-                        hidden
-                    />
-                </td>
+               
+
+                
 
                 
             </tr>`; // New input field HTML
