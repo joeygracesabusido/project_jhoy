@@ -71,7 +71,7 @@ async def insert_purchase_order(data:PurchaseOrder, username: str = Depends(get_
             purchase_order = mydb['purchase_order']
             purchase_order.create_index("po_no", unique=True)
 
-             # Get the current year
+            # Get the current year
             current_year = datetime.now().year
 
             # Check for the latest job order for the current year

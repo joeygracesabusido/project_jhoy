@@ -1,5 +1,7 @@
 $(document).ready(function() {
     // Function to fetch and display journal entries
+    
+    
     function loadJournalEntries() {
         $.ajax({
             url: '/api-get-journal-entry-list/',
@@ -23,7 +25,7 @@ $(document).ready(function() {
                             <td>
                                 <!-- Add action buttons here if needed -->
                                 <button class="btn btn-primary btn-sm">Edit</button>
-                                <button class="btn btn-danger btn-sm">Delete</button>
+                                <!--<button class="btn btn-danger btn-sm">Delete</button> -->
                             </td>
                         </tr>
                     `;
@@ -46,8 +48,26 @@ $(document).ready(function() {
 
 // this is for DataTable
 const initializeDataTable = () => {
-    $('#table_journal_entry').DataTable();
-};
+
+    new DataTable('#table_journal_entry', {
+        layout: {
+            topStart: 'buttons'
+        },
+        buttons: ['copy', 'csv']
+    });
+
+    
+
+
+    
+
+    // $('#table_journal_entry').DataTable();
+
+
+    };
+
+
+
 
 // <td>${entry.debit.toLocaleString()}</td>
 // <td>${entry.credit.toLocaleString()}</td>

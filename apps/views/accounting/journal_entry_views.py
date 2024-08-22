@@ -5,6 +5,8 @@ from apps.database.databases import connectionDB
 from typing import Optional
 from datetime import date, datetime
 
+from sqlalchemy import desc
+
 
 from apps.base_model.journal_entry_bm import JournalEntryBM
 
@@ -46,4 +48,16 @@ class JournalEntryViews(): # this class is for Type of Account
             except :
                 return None
             
-   
+    @staticmethod
+    def get_journal_entry_by_ref(journal_type):
+        with Session(engine) as session:
+            try:
+                statement = select(JournalEntry).where(JournalEntry.journal_type == journal_type).order_by(desc(JournalEntry.reference))
+                latest_entry = session.exec(statement).first()
+
+                if latest_entry:
+                    return latest_entry
+                return None
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                return None
