@@ -72,7 +72,7 @@ async def insert_journal_entry(request: Request,username: str = Depends(get_curr
             # If no reference exists, start with '1'
             reference = f" JV-{current_year}-1"
     else:
-        reference_no = JournalEntryViews.get_journal_entry_by_ref(ref=reference)
+        reference_no = JournalEntryViews.get_journal_entry_by_ref(journal_type=reference)
 
         if reference_no:
             # Extract the last number from the reference
