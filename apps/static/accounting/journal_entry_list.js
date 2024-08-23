@@ -24,7 +24,12 @@ $(document).ready(function() {
                             
                             <td>
                                 <!-- Add action buttons here if needed -->
-                                <button class="btn btn-primary btn-sm">Edit</button>
+                                <!--<button class="btn btn-primary btn-sm">Edit</button>-->
+
+                                <a href="/api-update-journal-entry-temp/${entry.reference}"> \
+                                <button type="button" class="btn btn-primary btn-sm"> \
+                                 Edit</button></a>
+
                                 <!--<button class="btn btn-danger btn-sm">Delete</button> -->
                             </td>
                         </tr>

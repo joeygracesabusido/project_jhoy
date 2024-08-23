@@ -16,4 +16,8 @@ class JournalEntryBM(BaseModel):
     user: str 
     date_updated: Optional[datetime]
     date_created: Optional[datetime]
-   
+
+    class Config:
+        orm_mode = True  # Enable orm_mode
+        from_attributes = True  # Set from_attributes to True
+

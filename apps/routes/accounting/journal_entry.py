@@ -41,16 +41,44 @@ async def get_journal_entry(username: str = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
     
 @api_journale_entry.get('/api-get-journal-entry-by-ref/', response_model=List[JournalEntryBM])
-async def get_jorunal_entry_by_ref(ref: str, username: str = Depends(get_current_user)):
+async def get_journal_entry_by_ref(ref: str, username: str = Depends(get_current_user)):
     try:
-        # Call the method to get the list of chart of accounts
-        jv_list = JournalEntryViews.get_journal_entry_by_ref(journal_type=ref)
-        
-        if jv_list is None:
+        # Call the method to get the journal entry
+        jv_entries = JournalEntryViews.get_journal_entry_by_ref(reference=ref)
+
+        if not jv_entries:
             raise HTTPException(status_code=404, detail="No journal voucher found")
         
-        return [jv_list]
+        # Convert the SQLAlchemy result to a list of Pydantic models
+        return [JournalEntryBM.from_orm(entry) for entry in jv_entries]
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@api_journale_entry.get('/api-get-journal-entry-by-ref2/')
+async def get_journal_entry_by_ref2(ref: str, username: str = Depends(get_current_user)):
+    try:
+        # Call the method to get the journal entry
+        journal_entry = JournalEntryViews.get_journal_entry_by_ref(reference=ref)
+        
+        if journal_entry:
+            journal_data = [{
+                    "id": item.id,
+                    "transdate": item.transdate,
+                    "journal_type": item.journal_type,
+                    "reference": item.reference,
+                    "description":item.description,
+                    "chart_of_account_code": item.chart_of_account_code,
+                    "chart_of_account": item.chart_of_account,
+                    "account_code_id": item.account_code_id,
+                    "debit": item.debit,
+                    "credit": item.credit
+                }
+                for item in journal_entry 
+                ]
+            return journal_data
 
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
