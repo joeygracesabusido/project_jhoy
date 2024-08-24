@@ -171,21 +171,21 @@
             
             <tbody id="addrow">
                 {% for entry in journal_data %}
-                <tr>
+                <tr>uaahh
                     <td>
-                        <input type="text" name="account_code{{ loop.index }}" value="{{ entry.chart_of_account_code }}">
+                        <input type="text" name="account_code{{ loop.index }}" id="account_code{{ loop.index }}" value="{{ entry.chart_of_account_code  }}">
                     </td>
                     <td>
-                        <input type="text" name="accountTitle{{ loop.index }}" id="ccountTitle{{ loop.index }}" value="{{ entry.chart_of_account }}">
+                        <input type="text" name="accountTitle{{ loop.index }}" id="accountTitle{{ loop.index }}" value="{{ entry.chart_of_account }}">
                     </td>
                     <td>
-                        <input type="number" name="amount{{ loop.index }}" class="amount" onchange="myFunction2()" value="{{ entry.debit }}">
+                        <input type="number" name="amount{{ loop.index }}" class="amount" step="any" onchange="myFunction2()" value="{{ entry.debit }}">
                     </td>
                     <td>
-                        <input type="number" name="credit_amount{{ loop.index }}" id="credit_amount{{ loop.index }}" class="credit_amount" step="0.01" onchange="myFunction2()" value="{{ entry.credit }}">
+                        <input type="number" name="credit_amount{{ loop.index }}" id="credit_amount{{ loop.index }}" class="credit_amount" step="any" onchange="myFunction2()" value="{{ entry.credit }}">
                     </td>
                     <td>
-                        <input type="text" name="chart_of_account_id{{ loop.index }}" id="chart_of_account_id{{ loop.index }}" class="chart_of_account_id" value="{{ entry.id }}" hidden>
+                        <input type="text" name="chart_of_account_id" id="chart_of_account_id" class="chart_of_account_id" value="{{ entry.id }}" hidden>
                     </td>
                     <td>
                         <button type="button" class="btn btn-danger remove-row">Remove</button>

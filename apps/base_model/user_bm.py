@@ -13,4 +13,18 @@ class UserBM(BaseModel):
     role: str 
     is_active: bool 
     date_updated: Optional[datetime] = None
+
+    class Config:
+        orm_mode = True  # Enable orm_mode
+        from_attributes = True  # Set from_attributes to True
+
+class UpdateUserBM(BaseModel):
+    
+    
+    is_active: bool 
+    
+
+    class Config:
+        orm_mode = True  # Enable orm_mode
+        from_attributes = True  # Set from_attributes to True
     

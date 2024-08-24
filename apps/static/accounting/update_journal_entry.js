@@ -29,7 +29,7 @@ $(document).ready(function() {
                         id="amount${x}"
                         class="amount"
                         onchange="myFunction2()"
-                        step="0.01"
+                        step="any"
                     />
                 </td>
                 <td style="padding: 0; margin: 0;">
@@ -39,7 +39,7 @@ $(document).ready(function() {
                         id="credit_amount${x}"
                         class="credit_amount"
                         onchange="myFunction2()"
-                        step="0.01"
+                        step="any"
                     />
                 </td>
 
@@ -49,7 +49,7 @@ $(document).ready(function() {
                         name="chart_of_account_id${x}"
                         id="chart_of_account_id${x}"
                         class="chart_of_account_id"
-                        step="0.01"
+                        
                         hidden
                     />
                 </td>
