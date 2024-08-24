@@ -14,10 +14,13 @@ $(document).ready(function() {
 
         // Proceed if passwords match
         var formData = {
-            fullname: $('#fullname').val(),
+            full_name: $('#fullname').val(),
             username: $('#username').val(),
-            password: password,
-            created: new Date().toISOString() // current datetime in ISO format
+            hashed_password: $('#password').val(),
+            email_add: $('#email_add').val(),
+            role: $('#role').val(),
+            is_active: $('#is_activate').val(),
+            date_created: new Date().toISOString() // current datetime in ISO format
         };
 
         $.ajax({

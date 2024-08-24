@@ -24,6 +24,24 @@
             </div>
 
             <div class="form-group">
+                <label for="Role">Role</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="DEVELOPER">Developer</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="USER" selected>User</option>
+                    <option value="GUEST">Guest</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                
+                <select class="form-control" id="is_activate" name="is_activate" required hidden>
+                    <option value="False">False</option>
+                  
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
