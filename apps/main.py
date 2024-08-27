@@ -16,6 +16,8 @@ from apps.routes.graphql import graphql_app
 
 
 
+from apps.routes.accounting.chart_of_account_temp import api_chart_of_account_temp
+
 from apps.routes.accounting.chart_of_account import api_chart_of_account
 from apps.routes.accounting.insert_account_type import api_account_type
 
@@ -42,6 +44,8 @@ app.add_middleware(
 
 
 app.include_router(api, tags=["admin"])
+
+app.include_router(api_chart_of_account_temp)
 
 
 app.include_router(login_router)
