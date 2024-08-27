@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const login = async () => {
         var username = document.querySelector('#username').value;
         var password = document.querySelector('#password').value;
-        let alert;
 
         const search_url = `/api-login/?username1=${username}&password1=${password}`;
 
@@ -15,20 +14,25 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(data);
 
             if (response.ok) {
-                // Login successful
-                console.log("Login successful");
-                // document.querySelector('#alert').innerHTML = 'Login successful';
-                window.location.assign("/dashboard/")
-                // Redirect or perform any other actions on successful login
-            } else if (response.status === 401) {
-                // Incorrect password or username
-                document.querySelector('#alert').innerHTML = 'Incorrect Password or Username';
+                window.location.assign("/dashboard/");
+                // if (data === null) {
+                //     document.querySelector('#alert').innerHTML = 'User is not registered';
+                // } else {
+                //     // Login successful
+                //     console.log("Login successful");
+                //     window.location.assign("/dashboard/");
+                // }
             } else if (response.status === 400) {
                 // Incorrect password or username
-                document.querySelector('#alert').innerHTML = 'Unauthorized';
-            } else if (response.status === 500) {
-                // Incorrect password
-                document.querySelector('#alert').innerHTML = 'Incorrect Password';
+                document.querySelector('#alert').innerHTML = 'Password & Username did Not Match';
+            }else if (response.status === 401) {
+                // Incorrect password or username
+                document.querySelector('#alert').innerHTML = 'Username is Not Register';
+            }
+            
+            else if (response.status === 500) {
+                // Server error
+                document.querySelector('#alert').innerHTML = 'Server Error';
             } else {
                 // Other errors
                 document.querySelector('#alert').innerHTML = 'Error: ' + response.statusText;
@@ -46,9 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
         login();
     });
 
-    // Add event listener for the Enter key on the password field
     document.querySelector('#password').addEventListener("keydown", function(event) {
-        console.log("Key pressed: " + event.key); // Log the key pressed
+        console.log("Key pressed: " + event.key);
         if (event.key === "Enter") {
             console.log("Enter key pressed");
             login();

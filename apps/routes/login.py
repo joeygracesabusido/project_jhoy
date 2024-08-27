@@ -12,6 +12,8 @@ mydb = create_mongo_client()
 
 
 from ..authentication.utils import OAuth2PasswordBearerWithCookie
+from apps.views.sign_up_views import UserViews
+
 
 from jose import jwt
 
@@ -42,29 +44,25 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-password1 = ""
+
 def authenticate_user(username, password):
+    user = UserViews.get_user_for_login(username=username)
     
-    user = mydb.login.find({
-        '$and':
-            [{"username":username},{'status':'true'}]})
     
-
-    for i in user:
+    if user:
        
-        username = i['username']
-        password1 = i['password']
-        
-   
-        if user:
-            
-            password_check = pwd_context.verify(password,password1)
-            
-            return password_check
 
-            
-        else :
-            False
+        if password == user.hashed_password:
+        
+            return True
+        
+        else:
+            return False
+    
+       
+    else:
+        return None  # User not found or is inactive
+
 
 
 
@@ -112,16 +110,17 @@ def login(username1: Optional[str],password1:Optional[str],response:Response):
         
     elif user == False:
         raise HTTPException(
-            status_code=401,
+            status_code=400,
             detail= "Username and Password Did not Match",
             # headers={"WWW-Authenticate": "Basic"},
         )
 
-    elif user == None:
-             raise HTTPException(
-            status_code=400,
-            detail= "UnAthorized",
-            # headers={"WWW-Authenticate": "Basic"},
+    
+    
+    elif user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Username is not registered",
         )
 
   

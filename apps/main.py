@@ -7,18 +7,13 @@ from starlette.responses import PlainTextResponse
 # from .routes.login import login_router
 from apps.routes.admin import api
 from apps.routes.login import login_router
-from apps.routes.inventory import api_invt
-from apps.routes.job_order_temp import api_jo_temp
-from apps.routes.job_order import api_job_order
+
 from apps.routes.payroll_template import api_payroll_temp
 from apps.routes.payroll import api_payroll
 
 from apps.routes.graphql import graphql_app
 
-from apps.routes.inventory_temp import api_inventory
 
-from apps.routes.purchase_order_temp import api_purchase_ord_temp
-from apps.routes.purchase_order import api_purchase_order
 
 
 from apps.routes.accounting.chart_of_account import api_chart_of_account
@@ -47,16 +42,14 @@ app.add_middleware(
 
 
 app.include_router(api, tags=["admin"])
+
+
 app.include_router(login_router)
-app.include_router(api_inventory)
-app.include_router(api_invt, tags=['inventory'])
-app.include_router(api_jo_temp)
-app.include_router(api_job_order, tags=['Job Order'])
+
 app.include_router(api_payroll_temp)
 app.include_router(api_payroll, tags=['paryoll'])
 
-app.include_router(api_purchase_ord_temp)
-app.include_router(api_purchase_order, tags=['Purchase Order'])
+
 
 
 app.include_router(api_accounting_temp)
