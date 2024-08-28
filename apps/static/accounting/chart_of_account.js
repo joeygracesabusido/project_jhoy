@@ -21,7 +21,7 @@ $(document).ready(function() {
                                 <!-- Add action buttons here if needed -->
                                 <!--<button class="btn btn-primary btn-sm">Edit</button>-->
 
-                                <a href="/api-update-journal-entry-temp/${entry.reference}"> \
+                                <a href=""> \
                                 <button type="button" class="btn btn-primary btn-sm"> \
                                  Edit</button></a>
 
@@ -63,34 +63,7 @@ const initializeDataTable = () => {
     };
 
 
-// this function is for autocomplete for account type
-    // jQuery.noConflict();
-    // jQuery(document).ready(function($) {
-    //     $(document).on('focus', '[id^="accoun_type"]', function() {
-    //         $(this).autocomplete({
-    //             source: function(request, response) {
-    //                 $.ajax({
-    //                     url: "/api-autocomplete-account-type/", // Replace with your actual endpoint
-    //                     data: { term: request.term },
-    //                     dataType: "json",
-    //                     success: function(data) {
-    //                         response(data);
-    //                     },
-    //                     error: function(err) {
-    //                         console.error("Error fetching autocomplete data:", err);
-    //                     }
-    //                 });
-    //             },
-    //             minLength: 0,
-    //             select: function(event, ui) {
-    //                 $(this).val(ui.item.value);
-    //                 $(this).val(ui.item.id);
-                    
-    //                 return false;
-    //             }
-    //         });
-    //     });
-    // });
+
 
     jQuery.noConflict();
     jQuery(document).ready(function($) {
