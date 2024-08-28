@@ -133,7 +133,7 @@ const initializeDataTable = () => {
     jQuery.noConflict();
     jQuery(document).ready(function($) {
         // Handle the click event for the "Save changes" button
-        $('#insert_chart_of_account .btn-primary').on('click', function() {
+        $('#btn_save_chart_of_account').on('click', function() {
             // Gather form data
             const data = {
                 chart_of_account_code: $('#chart_of_account_code').val(),
@@ -142,6 +142,8 @@ const initializeDataTable = () => {
                 account_type_id: $('#account_type_id').val(),
                 description: $('#description').val()
             };
+
+            console.log(data)
 
             // Send the data to the FastAPI endpoint
             $.ajax({
@@ -153,6 +155,38 @@ const initializeDataTable = () => {
                     // Display success message or perform further actions
                     alert(response.message);
                     $('#insert_chart_of_account').modal('hide'); // Hide the modal
+                    location.reload(); // Reload the page or update the UI as needed
+                },
+                error: function(xhr, status, error) {
+                    // Handle any errors that occurred during the request
+                    alert('Error: ' + xhr.responseText);
+                    console.error('Error details:', xhr);
+                }
+            });
+        });
+    });
+
+
+    jQuery.noConflict();
+    jQuery(document).ready(function($) {
+        // Handle the click event for the "Save changes" button
+        $('#btn_save_type_of_account').on('click', function() {
+            // Gather form data
+            const data = {
+                account_type: $('#account_type_ins').val(),
+                
+            };
+
+            // Send the data to the FastAPI endpoint
+            $.ajax({
+                url: '/api-insert-account-type/', // FastAPI endpoint
+                type: 'POST',
+                contentType: 'application/json', // Specify JSON content type
+                data: JSON.stringify(data), // Convert data to JSON
+                success: function(response) {
+                    // Display success message or perform further actions
+                    alert(response.message);
+                    $('#insert_account_type').modal('hide'); // Hide the modal
                     location.reload(); // Reload the page or update the UI as needed
                 },
                 error: function(xhr, status, error) {

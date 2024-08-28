@@ -20,7 +20,7 @@ api_account_type = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
 
-@api_account_type.post('/api-insert-account-type')
+@api_account_type.post('/api-insert-account-type/')
 async def insert_account_type(items:AccountTypeBM, username: str = Depends(get_current_user)):
 
     
