@@ -113,7 +113,7 @@ def login(response:Response,form_data: OAuth2PasswordRequestForm = Depends()):
 def sign_up(data: UserBM):
     """API endpoint to insert a new user."""
     try:
-        UserViews.insert_user(data)
+        UserViews.insert_user(data,get_password_hash(data.hashed_password))
         return ("New User Has been Saved")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

@@ -15,24 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 window.location.assign("/dashboard/");
-                // if (data === null) {
-                //     document.querySelector('#alert').innerHTML = 'User is not registered';
-                // } else {
-                //     // Login successful
-                //     console.log("Login successful");
-                //     window.location.assign("/dashboard/");
-                // }
             } else if (response.status === 400) {
                 // Incorrect password or username
-                document.querySelector('#alert').innerHTML = 'Password & Username did Not Match';
-            }else if (response.status === 401) {
-                // Incorrect password or username
-                document.querySelector('#alert').innerHTML = 'Username is Not Register';
-            }
-            
-            else if (response.status === 500) {
+                document.querySelector('#alert').innerHTML = 'Password & Username did not match';
+            } else if (response.status === 401) {
+                // Username not registered
+                document.querySelector('#alert').innerHTML = 'Username is not registered';
+            } else if (response.status === 500) {
                 // Server error
-                document.querySelector('#alert').innerHTML = 'Server Error';
+                document.querySelector('#alert').innerHTML = 'Server error. Please try again later.';
             } else {
                 // Other errors
                 document.querySelector('#alert').innerHTML = 'Error: ' + response.statusText;

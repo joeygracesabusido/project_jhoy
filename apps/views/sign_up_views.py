@@ -16,11 +16,11 @@ engine = connectionDB.conn()
 class UserViews(): # this class is for User
 
     @staticmethod
-    def insert_user(item: UserBM): # this is for inserting User
+    def insert_user(item: UserBM, hashed_password: str): # this is for inserting User
         
          # Create a dictionary from the item
         item_data = item.dict()  # Assuming item is a Pydantic model
-        
+        item_data['hashed_password'] = hashed_password
         # Create an instance of AccountType using ** unpacking
         insertData = User(**item_data)
         
