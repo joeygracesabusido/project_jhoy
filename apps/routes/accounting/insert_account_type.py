@@ -31,6 +31,38 @@ async def insert_account_type(items:AccountTypeBM, username: str = Depends(get_c
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@api_account_type.get("/api-autocomplete-account-type/")
+async def autocomplete_account_type(term: Optional[str] = None, username: str = Depends(get_current_user)):
+    try:
+        # Retrieve all chart of account data from the database
+        account_type = TypeofAccountViews.get_account_type()
+        
+        print(account_type)
+        # Filter account type based on the search term
+        if term:
+            filtered_coa = [
+                item for item in account_type
+                if term.lower() in item.account_type.lower()
+            ]
+        else:
+            filtered_coa = account_type  # If no term is provided, return all
+
+        # Construct suggestions from filtered chart of account data
+        suggestions = [
+            {
+                "value": f"{item.account_type}",
+                "id": item.id,
+                
+            }
+            for item in filtered_coa
+        ]
+
+        return suggestions
+
+    except Exception as e:
+        error_message = str(e)
+        raise HTTPException(status_code=500, detail=error_message)
+    
     
 
 

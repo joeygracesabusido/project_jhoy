@@ -142,6 +142,34 @@ body{
 }
 
 
+.container2 {
+    display: flex; /* Align items in a row */
+    align-items: center; /* Align items vertically in the center */
+    margin-bottom: 10px; /* Space between rows */
+}
+
+.container2 label {
+    flex-basis: 150px; /* Adjusts label width */
+    text-align: right;
+    margin-right: 20px; /* Space between label and input */
+    
+}
+
+/* Input styling */
+.container2 input {
+    flex-grow: 1; /* Allows input to expand to take available space */
+    width: auto; /* Input width is controlled by flex-grow */
+    height: auto; /* Remove fixed height for better alignment */
+    background-color: darkgray;
+}
+
+/* Textarea styling */
+.container2 textarea {
+    flex-grow: 1; /* Allows the textarea to expand */
+    width: auto; /* Adjusts to the full width of the container */
+    height: auto;
+    background-color: darkgray;
+}
 
 
 

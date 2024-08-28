@@ -9,6 +9,9 @@ from  ..database.mongodb import create_mongo_client
 mydb = create_mongo_client()
 
 
+from apps.views.sign_up_views import UserViews
+
+
 JWT_SECRET = 'myjwtsecret'
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -41,7 +44,8 @@ def get_current_user(request:Request):
 
             else:
 
-                user = mydb.login.find_one({"username": username})
+                # user = mydb.login.find_one({"username": username})
+                user = UserViews.get_user_for_login(username=username)
 
                 if user == [] :
                     raise HTTPException(
