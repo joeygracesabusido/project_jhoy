@@ -27,6 +27,9 @@ from apps.routes.accounting.accounting_templ import api_accounting_temp
 
 from apps.routes.accounting.journal_entry import api_journale_entry
 
+
+from apps.routes.accounting.trial_balance_temp import api_trial_balance_temp
+
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
@@ -64,6 +67,7 @@ app.include_router(api_chart_of_account, tags=['Chart of Account'])
 
 app.include_router(api_journale_entry, tags=['Journal Entry'])
 
+app.include_router(api_trial_balance_temp)
 
 # Mount Strawberry's GraphQL app onto FastAPI
 app.mount("/graphql", graphql_app)

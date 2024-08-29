@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException, Depends, Request, Response, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Dict
 from pydantic import BaseModel
 from bson import ObjectId
 
@@ -82,6 +82,36 @@ async def get_journal_entry_by_ref2(ref: str, username: str = Depends(get_curren
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@api_journale_entry.get('/trial-balance-report/')
+async def api_get_journal_entry_trial_balance(
+    datefrom: Optional[str] = None ,
+    dateto: Optional[str] = None 
+):
+    try:
+        # Call the static method
+        data = JournalEntryViews.get_journal_entry_by_journal_trialbal(datefrom, dateto)
+        if data is None:
+            raise HTTPException(status_code=404, detail="No data found for the given date range.")
+        return {"data": data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@api_journale_entry.get('/trial-balance-report2/')
+async def api_get_trialBalance(
+    datefrom: Optional[str] = None,
+    dateto: Optional[str] = None
+) -> List[Dict]:
+    try:
+        # Call the static method
+        data =  JournalEntryViews.get_journal_entry_by_one_table(datefrom, dateto)
+        
+        if not data:
+            raise HTTPException(status_code=404, detail="No data found for the given date range.")
+        
+        return {"data": data}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 
 

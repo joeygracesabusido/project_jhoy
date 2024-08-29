@@ -44,7 +44,7 @@ async def insert_chart_of_account(items:ChartofAccountBM, username: str = Depend
 #         raise HTTPException(status_code=500, detail=str(e))
 
 @api_chart_of_account.get('/api-get-chart-of-accounts/', response_model=List[ChartofAccountBM])
-async def get_chart_of_accounts(sername: str = Depends(get_current_user)):
+async def get_chart_of_accounts(username: str = Depends(get_current_user)):
     try:
         # Call the method to get the list of chart of accounts
         chart_of_accounts = ChartofAccountViews.get_chart_of_account()

@@ -13,11 +13,12 @@ from bson import ObjectId
 
 from ...authentication.authenticate_user import get_current_user
 
-api_chart_of_account_temp= APIRouter(include_in_schema=False)
+
+
+api_trial_balance_temp= APIRouter(include_in_schema=False)
 templates = Jinja2Templates(directory="apps/templates")
 
 
-@api_chart_of_account_temp.get("/api-chart-of-account-temp/", response_class=HTMLResponse)
-async def api_chart_of_account_template(request: Request,username: str = Depends(get_current_user)):
-    return templates.TemplateResponse("accounting/chart_of_account.html", {"request": request})
-
+@api_trial_balance_temp.get("/api-trial-balance-temp/", response_class=HTMLResponse)
+async def get_trial_balance_temp(request: Request):
+    return templates.TemplateResponse("accounting/trial_balance.html", {"request": request})

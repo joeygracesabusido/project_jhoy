@@ -1,11 +1,13 @@
 from sqlmodel import Field, Session,  create_engine,select,func,funcfilter,within_group,Relationship,Index
 
 from apps.models.accounting.journal_entry import JournalEntry
+from apps.models.accounting.chart_of_account import ChartofAccount
 from apps.database.databases import connectionDB
-from typing import Optional
+from typing import Optional, List, Dict
 from datetime import date, datetime
 
 from sqlalchemy import desc
+from sqlalchemy.sql import func
 
 
 from apps.base_model.journal_entry_bm import JournalEntryBM
@@ -94,3 +96,98 @@ class JournalEntryViews(): # this class is for Type of Account
             except Exception as e:
                 print(f"An error occurred: {e}")
                 return False
+
+    @staticmethod
+    def get_journal_entry_by_journal_trialbal(datefrom: Optional[str] = None, dateto: Optional[str]=None) -> List[Dict]:
+        with Session(engine) as session:
+            try:
+                # Start building the SQL statement
+                statement = select(
+                    ChartofAccount.chart_of_account,
+                    func.sum(JournalEntry.debit).label("debit"),
+                    func.sum(JournalEntry.credit).label("credit"),
+                ).join(
+                    JournalEntry,
+                    ChartofAccount.id == JournalEntry.account_code_id
+                )
+
+                # Add date filtering if provided
+                if datefrom and dateto:
+                    statement = statement.where(
+                        JournalEntry.transdate.between(datefrom, dateto)
+                    ).group_by(ChartofAccount.id).order_by(ChartofAccount.chart_of_account_code)
+
+                # Group by ChartofAccount.id
+                statement = statement.group_by(ChartofAccount.id).order_by(ChartofAccount.chart_of_account_code)
+
+
+                # Execute the statement and fetch all results
+                results = session.execute(statement)
+                data = results.fetchall()
+
+                # Convert results to list of dictionaries with positive debit/credit balance
+                data_as_dict = []
+                for row in data:
+                    debit = row.debit or 0
+                    credit = row.credit or 0
+                    balance = debit - credit  # Calculate the balance
+
+                    # Assign to debit or credit based on balance
+                    if balance > 0:
+                        entry = {"chart_of_account": row.chart_of_account, "debit": balance, "credit": 0}
+                    else:
+                        entry = {"chart_of_account": row.chart_of_account, "debit": 0, "credit": abs(balance)}
+
+                    data_as_dict.append(entry)
+
+                return data_as_dict
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                return []
+            
+    @staticmethod
+    def get_journal_entry_by_one_table(datefrom: Optional[str] = None, 
+                                       dateto: Optional[str]=None) -> List[Dict]:# this function is to query for payroll activity
+        with Session(engine) as session:
+            try:
+                statement = select(JournalEntry,ChartofAccount,
+                                   func.sum(JournalEntry.debit).label("debit"),
+                    func.sum(JournalEntry.credit).label("credit")).where(
+                    (JournalEntry.account_code_id == ChartofAccount.id) 
+                )
+
+                # Add date filtering if provided
+                if datefrom and dateto:
+                    statement = statement.where(
+                        JournalEntry.transdate.between(datefrom, dateto)
+                    )
+
+                # Group by ChartofAccount.id
+                statement = statement
+
+
+                # Execute the statement and fetch all results
+                results = session.execute(statement)
+                data = results.fetchall()
+
+                # Convert results to list of dictionaries with positive debit/credit balance
+                data_as_dict = []
+                for row in data:
+                    debit = row.debit or 0
+                    credit = row.credit or 0
+                    balance = debit - credit  # Calculate the balance
+
+                    # Assign to debit or credit based on balance
+                    if balance > 0:
+                        entry = {"chart_of_account": row.chart_of_account, "debit": balance, "credit": 0}
+                    else:
+                        entry = {"chart_of_account": row.chart_of_account, "debit": 0, "credit": abs(balance)}
+
+                    data_as_dict.append(entry)
+
+                return data_as_dict
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                return []

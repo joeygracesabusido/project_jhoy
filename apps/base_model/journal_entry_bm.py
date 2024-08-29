@@ -3,14 +3,14 @@ from typing import Optional
 from datetime import datetime, date
 
 class JournalEntryBM(BaseModel):
-    id: Optional[int] 
+    id: Optional[int]= None
     transdate: date
     journal_type: str 
     reference: str 
     description: str
     chart_of_account_code: str 
     chart_of_account: str 
-    account_code_id: Optional[int] 
+    account_code_id: int
     debit: float 
     credit: float 
     user: str 

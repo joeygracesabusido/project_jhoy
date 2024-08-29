@@ -58,15 +58,25 @@ const initializeDataTable = () => {
         layout: {
             topStart: 'buttons'
         },
-        buttons: ['copy', 'csv']
+        buttons: [{
+            extend: 'copy',
+            text: 'Copy to Clipboard', // Button label
+            title: 'Trial Balance Report', // Title for the copied data
+            filename: 'Trial_Balance_Report', // Custom filename
+            exportOptions: {
+                columns: ':visible' // Export only visible columns
+            }
+        },
+        {
+            extend: 'csv',
+            text: 'Export to CSV', // Button label
+            title: 'Trial Balance Report', // Title in CSV file
+            filename: 'Trial_Balance_Report', // Custom filename without file extension
+            exportOptions: {
+                columns: ':visible' // Export only visible columns
+            }
+        }]
     });
-
-    
-
-
-    
-
-    // $('#table_journal_entry').DataTable();
 
 
     };

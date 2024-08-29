@@ -112,7 +112,7 @@ const initializeDataTable = () => {
                 chart_of_account_code: $('#chart_of_account_code').val(),
                 chart_of_account: $('#chart_of_account').val(),
                 account_type: $('#accoun_type').val(),
-                account_type_id: $('#account_type_id').val(),
+                accoun_type_id: $('#account_type_id').val(),
                 description: $('#description').val()
             };
 
