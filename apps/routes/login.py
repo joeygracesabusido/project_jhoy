@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, Body, HTTPException, Depends, Request, Response, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
@@ -5,6 +6,8 @@ from typing import Union, List, Optional
 
 
 from datetime import datetime, timedelta
+
+from apps.authentication.authenticate_user import get_current_user
 
 
 from  ..database.mongodb import create_mongo_client
@@ -159,9 +162,10 @@ def login(username1: Optional[str], password1: Optional[str], response: Response
             data={"sub": username1, "exp": datetime.utcnow() + timedelta(ACCESS_TOKEN_EXPIRE_MINUTES)}, 
             expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         )
+        user_details = UserViews.get_user_details(username1)
         jwt_token = jwt.encode({"sub": username1, "exp": datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)}, JWT_SECRET, algorithm=ALGORITHM)
         response.set_cookie(key="access_token", value=f'Bearer {jwt_token}', httponly=True)
-        return {"message": "Login successful"}
+        return {"message": "Login successful", "user":user_details}
 
     elif user is None:  # User not found
         raise HTTPException(status_code=401, detail="Username is not registered")
@@ -173,8 +177,9 @@ def login(username1: Optional[str], password1: Optional[str], response: Response
 
 
 @login_router.get("/dashboard/", response_class=HTMLResponse)
-async def api_login(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+async def api_login(request: Request,):
+
+    return templates.TemplateResponse("dashboard/new_dashboard.html", {"request": request})
 
 
 

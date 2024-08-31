@@ -66,6 +66,24 @@ class UserViews(): # this class is for User
             except Exception as e:
                 print(f"An error occurred: {e}")
                 return None
+    
+    @staticmethod
+    def get_user_details(username: str):
+        """This function retrieves a list of active users based on the username."""
+        with Session(engine) as session:
+            try:
+                # Use and_ from SQLAlchemy to combine multiple conditions
+                statement = select(User.full_name, User.role).where(
+                    and_(User.username == username, User.is_active == True)
+                )
+
+                results = session.exec(statement).one()
+                data = {'full_name':results.full_name, 'role':results.role.value}
+                
+                return data
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                return None
             
     @staticmethod
     def update_user(username: str, is_active: bool):

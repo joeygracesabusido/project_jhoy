@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    
     console.log("DOM fully loaded and parsed");
 
     const login = async () => {
@@ -14,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(data);
 
             if (response.ok) {
+                // console.log(data.user);
+                localStorage.setItem('user', JSON.stringify(data.user));
                 window.location.assign("/dashboard/");
             } else if (response.status === 400) {
                 // Incorrect password or username
