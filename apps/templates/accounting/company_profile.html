@@ -1,1 +1,279 @@
-<h1>Test</h1>
+{% extends 'dashboard.html' %} {% block content %}
+
+<div id="main" class="main">
+  <div class="pagetitle">
+    <h1>Company Profile</h1>
+    <!-- <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a >Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav> -->
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">About Company</h5>
+
+            <!-- General Form Elements -->
+            <form id="myForm">
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-3 col-form-label"
+                  >Company Name</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    id="company_name"
+                    type="text"
+                    class="form-control"
+                    value="JE AMS"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-3 col-form-label"
+                  >Business Type</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    id="company_business_type"
+                    type="text"
+                    class="form-control"
+                    value="Corporation"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-3 col-form-label"
+                  >Financial Year End</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    id="company_financial_year_end"
+                    type="text"
+                    class="form-control"
+                    value=""
+                    readonly
+                  />
+                </div>
+              </div>
+              <!-- <div class="row mb-3">
+                  <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                  <div class="col-sm-10">
+                    <input type="email" class="form-control">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputNumber" class="col-sm-2 col-form-label">Number</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputNumber" class="col-sm-2 col-form-label">File Upload</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" type="file" id="formFile">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputDate" class="col-sm-2 col-form-label">Date</label>
+                  <div class="col-sm-10">
+                    <input type="date" class="form-control">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="inputTime" class="col-sm-2 col-form-label">Time</label>
+                  <div class="col-sm-10">
+                    <input type="time" class="form-control">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="inputColor" class="col-sm-2 col-form-label">Color Picker</label>
+                  <div class="col-sm-10">
+                    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#4154f1" title="Choose your color">
+                  </div>
+                </div> -->
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-3 col-form-label"
+                  >RDO</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    id="company_rdo"
+                    type="text"
+                    class="form-control"
+                    value="001"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputPassword" class="col-sm-3 col-form-label"
+                  >Address</label
+                >
+                <div class="col-sm-9">
+                  <textarea
+                    id="company_address"
+                    class="form-control"
+                    style="height: 80px"
+                     readonly
+                  >
+ {{"9WHQ+MGJ, Barangay Sacsac Rd, Consolacion, 6001 Cebu"}}</textarea
+                  >
+                </div>
+              </div>
+
+              <!-- <fieldset class="row mb-3">
+                  <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                  <div class="col-sm-10">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked="">
+                      <label class="form-check-label" for="gridRadios1">
+                        First radio
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                      <label class="form-check-label" for="gridRadios2">
+                        Second radio
+                      </label>
+                    </div>
+                    <div class="form-check disabled">
+                      <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios" value="option" disabled="">
+                      <label class="form-check-label" for="gridRadios3">
+                        Third disabled radio
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+                <div class="row mb-3">
+                  <legend class="col-form-label col-sm-2 pt-0">Checkboxes</legend>
+                  <div class="col-sm-10">
+
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="gridCheck1">
+                      <label class="form-check-label" for="gridCheck1">
+                        Example checkbox
+                      </label>
+                    </div>
+
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="gridCheck2" checked="">
+                      <label class="form-check-label" for="gridCheck2">
+                        Example checkbox 2
+                      </label>
+                    </div>
+
+                  </div>
+                </div> -->
+
+              <!-- <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Disabled</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" value="Read only / Disabled" disabled="">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Select</label>
+                  <div class="col-sm-10">
+                    <select class="form-select" aria-label="Default select example">
+                      <option selected="">Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div> -->
+
+              <!-- <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Multi Select</label>
+                  <div class="col-sm-10">
+                    <select class="form-select" multiple="" aria-label="multiple select example">
+                      <option selected="">Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                  </div>
+                </div> -->
+
+              <div class="text-center">
+                
+                <button
+                  type="button"
+                  id="updateButton"
+                  class="btn btn-primary"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+            <!-- End General Form Elements -->
+            <script>
+              let isEditting = false;
+
+              const company_name = document.getElementById("company_name");
+              const company_business_type = document.getElementById(
+                "company_business_type"
+              );
+              const company_financial_year_end = document.getElementById(
+                "company_financial_year_end"
+              );
+              const company_rdo = document.getElementById("company_rdo");
+              const company_address =
+                document.getElementById("company_address");
+
+              // company_name.disabled = true;
+              // company_business_type.disabled = true;
+              // company_financial_year_end.disabled = true;
+              // company_rdo.disabled = true;
+              // company_address.disabled = true;
+
+              const updateButton = document.getElementById('updateButton');
+                const fields = document.querySelectorAll('#myForm input[type="text"],#myForm textarea');
+
+              updateButton.addEventListener("click", () => {
+                fields.forEach((field) => {
+                  field.readOnly = !field.readOnly; // Toggle the readonly attribute
+                });
+
+                // Optionally change button text based on state
+                if (fields[0].readOnly) {
+                  updateButton.textContent = "Update"; // When fields are readonly
+                } else {
+                  updateButton.textContent = "Save"; // When fields are editable
+                }
+              });
+
+              // function toggleEdit() {
+              //   event.preventDefault();
+              //   // company_name.disabled = false;
+              //   // company_business_type.disabled = false;
+              //   // company_financial_year_end.disabled = false;
+              //   // company_rdo.disabled = false;
+              //   // company_address.disabled = false;
+              // }
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- End #main -->
+
+{% endblock %}

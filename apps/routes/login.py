@@ -179,7 +179,7 @@ def login(username1: Optional[str], password1: Optional[str], response: Response
 @login_router.get("/dashboard/", response_class=HTMLResponse)
 async def api_login(request: Request,):
 
-    return templates.TemplateResponse("dashboard/new_dashboard.html", {"request": request})
+    return templates.TemplateResponse("accounting/new_dashboard.html", {"request": request})
 
 
 

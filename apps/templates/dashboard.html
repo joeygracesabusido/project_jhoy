@@ -194,8 +194,7 @@
               <span
                 id="user_name_span"
                 class="d-none d-md-block dropdown-toggle ps-2"
-                ></span
-              > </a
+              ></span> </a
             ><!-- End Profile Iamge Icon -->
 
             <ul
@@ -257,7 +256,7 @@
               </a>
             </li>
             <li>
-              <a href="/api-accounting-temp/" class="sub-link"> 
+              <a href="/api-accounting-temp/" class="sub-link">
                 <i class="bi bi-circle"></i><span>Insert Journal Entry</span>
               </a>
             </li>
@@ -332,9 +331,15 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link main-link">
+          <a class="nav-link main-link" href="/company_profile/">
             <i class="bi bi-building"></i>
             <span>Company Profile</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link main-link" href="/branch/">
+            <i class="bx bx-git-branch"></i>
+            <span>Branch</span>
           </a>
         </li>
         <!-- End Dashboard Nav -->
@@ -472,8 +477,6 @@
     ></script>
 
     <script>
-
-
       const userString = localStorage.getItem("user");
       const user = JSON.parse(userString);
       function displayUserDetails() {
@@ -502,9 +505,17 @@
         // Handle sub nav-links
         subLinks.forEach(function (subLink) {
           const hrefValue = subLink.getAttribute("href");
-          console.log(window.location.pathname)
+          console.log(window.location.pathname);
           // Add 'active' class if the href value is included in the current path
           if (window.location.pathname.includes(hrefValue)) {
+            // Navigate to the closest `ul` (nav-content) and find its previous sibling (the main-link)
+            const p =
+              subLink.closest("ul.nav-content");
+              p.classList.add("show");
+            const m =p.previousElementSibling;
+            // Get the parent <li> of the main link
+            m.classList.remove("collapsed");
+            m.setAttribute('aria-expanded', 'true');
             subLink.classList.add("active");
           } else {
             // subLink.classList.remove('active');

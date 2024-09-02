@@ -26,6 +26,7 @@ from apps.routes.accounting.accounting_templ import api_accounting_temp
 
 
 from apps.routes.accounting.journal_entry import api_journale_entry
+from apps.routes.accounting.company_profile_temp import api_company_profile_temp
 
 
 from apps.routes.accounting.trial_balance_temp import api_trial_balance_temp
@@ -74,6 +75,7 @@ app.include_router(api_chart_of_account, tags=['Chart of Account'])
 
 
 app.include_router(api_journale_entry, tags=['Journal Entry'])
+app.include_router(api_company_profile_temp, tags=['Company Profile'])
 
 app.include_router(api_trial_balance_temp)
 
