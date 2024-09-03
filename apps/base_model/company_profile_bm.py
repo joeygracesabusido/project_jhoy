@@ -11,6 +11,6 @@ class CompanyProfileBM(BaseModel):
     rdo: str 
     type_of_bussiness: str 
     financial_year_end: str
-    user: str 
+    user: Optional[str] = None
     date_updated: Optional[datetime] = None
     date_created: Optional[datetime] = None

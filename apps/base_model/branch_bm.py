@@ -7,6 +7,6 @@ class BranchBM(BaseModel):
     id:  Optional[int] = None
     branch_name: str 
     address: str 
-    user: str 
-    date_updated: Optional[datetime] 
-    date_created: Optional[datetime]
+    user: Optional[str] = None
+    date_updated: Optional[datetime] = None
+    date_created: Optional[datetime] = None

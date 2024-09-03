@@ -23,6 +23,22 @@
             <form id="myForm">
               <div class="row mb-3">
                 <label for="inputText" class="col-sm-3 col-form-label"
+                  ></label
+                >
+
+                <div class="col-sm-9">
+                  <input
+                    id="id"
+                    type="text"
+                    class="form-control"
+                    value="{{ profiles[0].id }}"
+                    readonly hidden
+                  />
+                </div>
+            </div>
+
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-3 col-form-label"
                   >Company Name</label
                 >
                 <div class="col-sm-9">
@@ -30,11 +46,28 @@
                     id="company_name"
                     type="text"
                     class="form-control"
-                    value="JE AMS"
+                    value="{{ profiles[0].company_name }}"
                     readonly
                   />
                 </div>
               </div>
+
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-3 col-form-label"
+                  >Tin</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    id="tin"
+                    type="text"
+                    class="form-control"
+                    value="{{ profiles[0].tin}}"
+                    readonly
+                  />
+                </div>
+              </div>
+
+
               <div class="row mb-3">
                 <label for="inputText" class="col-sm-3 col-form-label"
                   >Business Type</label
@@ -44,7 +77,7 @@
                     id="company_business_type"
                     type="text"
                     class="form-control"
-                    value="Corporation"
+                    value="{{ profiles[0].type_of_bussiness }}"
                     readonly
                   />
                 </div>
@@ -58,54 +91,12 @@
                     id="company_financial_year_end"
                     type="text"
                     class="form-control"
-                    value=""
+                    value="{{ profiles[0].financial_year_end }}"
                     readonly
                   />
                 </div>
               </div>
-              <!-- <div class="row mb-3">
-                  <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                  <div class="col-sm-10">
-                    <input type="email" class="form-control">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-                  <div class="col-sm-10">
-                    <input type="password" class="form-control">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <label for="inputNumber" class="col-sm-2 col-form-label">Number</label>
-                  <div class="col-sm-10">
-                    <input type="number" class="form-control">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <label for="inputNumber" class="col-sm-2 col-form-label">File Upload</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="file" id="formFile">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <label for="inputDate" class="col-sm-2 col-form-label">Date</label>
-                  <div class="col-sm-10">
-                    <input type="date" class="form-control">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <label for="inputTime" class="col-sm-2 col-form-label">Time</label>
-                  <div class="col-sm-10">
-                    <input type="time" class="form-control">
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <label for="inputColor" class="col-sm-2 col-form-label">Color Picker</label>
-                  <div class="col-sm-10">
-                    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#4154f1" title="Choose your color">
-                  </div>
-                </div> -->
+              
               <div class="row mb-3">
                 <label for="inputText" class="col-sm-3 col-form-label"
                   >RDO</label
@@ -115,7 +106,7 @@
                     id="company_rdo"
                     type="text"
                     class="form-control"
-                    value="001"
+                    value="{{ profiles[0].rdo }}"
                     readonly
                   />
                 </div>
@@ -130,8 +121,8 @@
                     class="form-control"
                     style="height: 80px"
                      readonly
-                  >
- {{"9WHQ+MGJ, Barangay Sacsac Rd, Consolacion, 6001 Cebu"}}</textarea
+                  > {{ profiles[0].address }}
+                  </textarea
                   >
                 </div>
               </div>
@@ -224,49 +215,84 @@
             </form>
             <!-- End General Form Elements -->
             <script>
-              let isEditting = false;
+            let isEditting = false;
+                      
+                      const profile_id_input = document.getElementById("id");
+                      const company_name = document.getElementById("company_name");
+                      const tin =  document.getElementById("tin");
+                      const company_business_type = document.getElementById("company_business_type");
+                      const company_financial_year_end = document.getElementById("company_financial_year_end");
+                      const company_rdo = document.getElementById("company_rdo");
+                      const company_address = document.getElementById("company_address");
 
-              const company_name = document.getElementById("company_name");
-              const company_business_type = document.getElementById(
-                "company_business_type"
-              );
-              const company_financial_year_end = document.getElementById(
-                "company_financial_year_end"
-              );
-              const company_rdo = document.getElementById("company_rdo");
-              const company_address =
-                document.getElementById("company_address");
+                      const updateButton = document.getElementById("updateButton");
+                      const fields = document.querySelectorAll("#myForm input[type='text'], #myForm textarea");
 
-              // company_name.disabled = true;
-              // company_business_type.disabled = true;
-              // company_financial_year_end.disabled = true;
-              // company_rdo.disabled = true;
-              // company_address.disabled = true;
+                      updateButton.addEventListener("click", () => {
+                        fields.forEach((field) => {
+                          field.readOnly = !field.readOnly; // Toggle the readonly attribute
+                        });
 
-              const updateButton = document.getElementById('updateButton');
-                const fields = document.querySelectorAll('#myForm input[type="text"],#myForm textarea');
+                        if (fields[0].readOnly) {
+                          updateButton.textContent = "Update"; // When fields are readonly
+                        } else {
+                          updateButton.textContent = "Save"; // When fields are editable
+                        }
 
-              updateButton.addEventListener("click", () => {
-                fields.forEach((field) => {
-                  field.readOnly = !field.readOnly; // Toggle the readonly attribute
-                });
+                        // Check if the button is now in the "Save" state, indicating fields are editable
+                        if (updateButton.textContent === "Save") {
+                          isEditting = true;
+                        } else if (isEditting) {
+                          // If in the "Save" state, send the update request
+                          updateCompanyProfile();
+                          isEditting = false;
+                        }
+                      });
 
-                // Optionally change button text based on state
-                if (fields[0].readOnly) {
-                  updateButton.textContent = "Update"; // When fields are readonly
-                } else {
-                  updateButton.textContent = "Save"; // When fields are editable
-                }
-              });
+                      async function updateCompanyProfile() {
+                        // Gather data from input fields
+                        const profileData = {
+                          tin: tin.value,
+                          company_name: company_name.value,
+                          address: company_address.value,
+                          rdo: company_rdo.value,
+                          type_of_bussiness: company_business_type.value,
+                          financial_year_end: company_financial_year_end.value,
+                          user: "current_user" // Replace this with the current user if needed
+                        };
 
-              // function toggleEdit() {
-              //   event.preventDefault();
-              //   // company_name.disabled = false;
-              //   // company_business_type.disabled = false;
-              //   // company_financial_year_end.disabled = false;
-              //   // company_rdo.disabled = false;
-              //   // company_address.disabled = false;
-              // }
+                        const profile_id = parseInt(profile_id_input.value); // Ensure profile_id is correctly parsed as an integer
+
+                        if (isNaN(profile_id)) {
+                          alert("Invalid Profile ID");
+                          return;
+                        }
+
+                     
+
+                        try {
+                          // Send PUT request to update the company profile
+                          const response = await fetch(`/api-update-company_profile/?profile_id=${profile_id}`, {
+                            method: "PUT",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(profileData),
+                          });
+
+                          if (response.ok) {
+                            const result = await response.json();
+                            alert(result.message); // Show success message
+                          } else {
+                            const error = await response.json();
+                            alert(`Error: ${error.detail}`); // Show error message
+                          }
+                        } catch (error) {
+                          console.error("An error occurred:", error);
+                          alert("An error occurred while updating the profile.");
+                        }
+                      }
+
             </script>
           </div>
         </div>

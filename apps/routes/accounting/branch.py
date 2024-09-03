@@ -23,7 +23,7 @@ templates = Jinja2Templates(directory="apps/templates")
 @api_branch.post("/api-insert-branches/", response_model=None)
 async def create_branch(item: BranchBM, username: str = Depends(get_current_user)):
     try:
-        BranchViews.insert_branch(item, item.user)
+        BranchViews.insert_branch(item, user=username)
         return {"message": "Branch created successfully"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error creating branch: {e}")

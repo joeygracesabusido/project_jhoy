@@ -36,10 +36,10 @@ async def get_company_profiles(username: str = Depends(get_current_user)):
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Error retrieving profiles: {e}")
 
-@api_company_profile.put("/api-update-company_profile/{profile_id}", response_model=None)
+@api_company_profile.put("/api-update-company_profile/", response_model=None)
 async def update_company_profile(profile_id: int, item: CompanyProfileBM,username: str = Depends(get_current_user)):
     item.id = profile_id
-    updated_profile = CompanyProfileViews.update_company_profile(item)
+    updated_profile = CompanyProfileViews.update_company_profile(item, user=username)
     if updated_profile:
         return {"message": "Company profile updated successfully"}
     else:

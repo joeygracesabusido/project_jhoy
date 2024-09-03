@@ -54,12 +54,13 @@ class CompanyProfileViews(): # this class is for User
     
             
     @staticmethod
-    def update_company_profile(item: CompanyProfileBM):
+    def update_company_profile(item: CompanyProfileBM,user:str):
       
         with Session(engine) as session:
             try:
                 # Find the record to update
                 statement = select(CompanyProfile).where(CompanyProfile.id == item.id)
+                
                 result = session.exec(statement).one_or_none()
                 
                 if result:
@@ -71,7 +72,7 @@ class CompanyProfileViews(): # this class is for User
                     result.rdo = item.rdo
                     result.type_of_bussiness = item.type_of_bussiness
                     result.financial_year_end = item.financial_year_end
-                    result.user = item. user
+                    result.user = user
                     result.date_updated = item.date_updated
                     
                     # Commit the changes
