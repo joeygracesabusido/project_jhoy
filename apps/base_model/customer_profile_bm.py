@@ -2,17 +2,16 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, date
 
-class CompanyProfileBM(BaseModel):
-
+class CustomerProfileBM(BaseModel):
 
     id: Optional[int] = None
-    company_name: str 
+    bussiness_name: str 
+    name_of_tax_payer: str 
     tin: str
-    address: str 
-    rdo: str 
-    type_of_bussiness: str 
-    financial_year_end: str
+    rdo: str
+    address: str
+    tax_type: str
+    description: str
     user: Optional[str] = None
     date_updated: Optional[datetime] = None
-    date_created: Optional[datetime] = None
-   
+    date_created:  Optional[datetime] = None
