@@ -41,6 +41,7 @@ from apps.routes.accounting.branch import api_branch
 
 
 from apps.routes.accounting.customer_profile import api_customer_profile
+from apps.routes.accounting.customer_profile_temp import api_customer_profile_temp
 
 from fastapi.staticfiles import StaticFiles
 
@@ -91,6 +92,7 @@ app.include_router(api_branch_temp)
 
 
 app.include_router(api_customer_profile, tags=['Customer-Vendor'])
+app.include_router(api_customer_profile_temp,)
 
 # Mount Strawberry's GraphQL app onto FastAPI
 app.mount("/graphql", graphql_app)

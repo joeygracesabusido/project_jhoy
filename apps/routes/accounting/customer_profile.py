@@ -19,12 +19,12 @@ from apps.views.accounting.customer_profile_views import CustomerProfileViews
 api_customer_profile = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
-@api_customer_profile.get("/customer_profile/", response_class=HTMLResponse)
-async def api_chart_of_account_template(request: Request,
-                                        username: str = Depends(get_current_user)):
+# @api_customer_profile.get("/customer_profile/", response_class=HTMLResponse)
+# async def api_chart_of_account_template(request: Request,
+#                                         username: str = Depends(get_current_user)):
  
-    return templates.TemplateResponse("accounting/company_profile.html", 
-                                      {"request": request})
+#     return templates.TemplateResponse("accounting/company_profile.html", 
+#                                       {"request": request})
 
 
 @api_customer_profile.post("/api-insert-customer_profile/", response_model=None)
