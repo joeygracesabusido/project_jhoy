@@ -15,7 +15,7 @@ class UserBM(BaseModel):
     date_updated: Optional[datetime] = None
 
     class Config:
-        orm_mode = True  # Enable orm_mode
+        # orm_mode = True  # Enable orm_mode
         from_attributes = True  # Set from_attributes to True
 
 class UpdateUserBM(BaseModel):
