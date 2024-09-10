@@ -44,3 +44,35 @@ async def update_branch(branch_id: int, item: BranchBM, username: str = Depends(
         return {"message": "Branch updated successfully"}
     else:
         raise HTTPException(status_code=404, detail="Branch not found")
+@api_branch.get("/api-autocomplete-branch/")
+async def autocomplete_branch(term: Optional[str] = None, username: str = Depends(get_current_user)):
+    try:
+        
+        branch = BranchViews.get_branch()
+        
+        # Filter chart of accounts based on the search term
+        if term:
+            filtered_branch = [
+                item for item in branch
+                if term.lower() in item.branch_name.lower()
+            ]
+        else:
+            filtered_branch = branch  # If no term is provided, return all
+
+        # Construct suggestions from filtered chart of account data
+        suggestions = [
+            {
+                "value": f"{item.branch_name}",
+                "id": item.id,
+                
+            }
+            for item in filtered_branch
+        ]
+
+        return suggestions
+
+    except Exception as e:
+        error_message = str(e)
+        raise HTTPException(status_code=500, detail=error_message)
+
+
