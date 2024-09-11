@@ -85,4 +85,7 @@ const initializeDataTable = () => {
 
 
 // <td>${entry.debit.toLocaleString()}</td>
-// <td>${entry.credit.toLocaleString()}</td>
+// <td>${entry.credit.toLocaleString()}
+
+
+

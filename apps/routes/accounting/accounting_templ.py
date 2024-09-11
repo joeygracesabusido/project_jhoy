@@ -42,6 +42,7 @@ async def insert_journal_entry(request: Request,username: str = Depends(get_curr
     journal_type = form.get('journal_type')
     reference = form.get('reference')
     description = form.get('description')
+    branch_id = form.get('branch_id')
 
     # If a previous reference number exists, increment it
     if journal_type == 'General Ledger' and reference is not None:
@@ -71,19 +72,6 @@ async def insert_journal_entry(request: Request,username: str = Depends(get_curr
         else:
             # If no reference exists, start with '1'
             reference = f" JV-{current_year}-1"
-    # else:
-    #     reference_no = JournalEntryViews.get_journal_entry_by_ref(journal_type=reference)
-
-    #     if reference_no:
-    #         # Extract the last number from the reference
-    #         ref_no = reference_no.reference  # Access the 'reference' field from the object
-    #         last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
-            
-    #         # Generate the new reference number by incrementing the last number
-    #         reference = f" GL-{current_year}-{last_number + 1}"
-    #     else:
-    #         # If no reference exists, start with '1'
-    #         reference = f" GL-{current_year}-1"
             
 
     account_title = []
@@ -115,13 +103,13 @@ async def insert_journal_entry(request: Request,username: str = Depends(get_curr
             "transdate": trans_date, 
             "journal_type": journal_type,
             "reference": reference,
-            "reference": reference,
             "description": description, 
             "chart_of_account": account_title[i],
             "account_code_id": account_code_id[i],
             "chart_of_account_code": account_code[i],
             "debit": debit2,
             "credit": credit2,
+            "branch_id": int(branch_id),
             "user": username
             
           
@@ -137,6 +125,8 @@ async def insert_journal_entry(request: Request,username: str = Depends(get_curr
             try:
                 # Insert the entry into the database
                 JournalEntryViews.insert_journal_entry(**entry)
+                
+
             except Exception as e:
                 messeges = [str(e)]
                 return templates.TemplateResponse("accounting/insert_journal_entry.html", 

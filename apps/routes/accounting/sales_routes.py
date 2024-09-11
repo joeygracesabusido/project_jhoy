@@ -8,7 +8,6 @@ from bson import ObjectId
 
 
 
-
 from datetime import datetime, timedelta, date
 from apps.authentication.authenticate_user import get_current_user
 from apps.base_model.sales_bm import SalesBM
@@ -17,11 +16,12 @@ from apps.views.accounting.sales_views import SalesViews
 from apps.views.accounting.journal_entry_views import JournalEntryViews
 
 
+from apps.views.accounting.sales_views import SalesViews
 
 api_sales = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
-@api_sales.get("/sales-1/", response_class=HTMLResponse)
+@api_sales.get("/sales/", response_class=HTMLResponse)
 async def api_chart_of_account_template(request: Request,
                                         username: str = Depends(get_current_user)):
  
@@ -29,12 +29,11 @@ async def api_chart_of_account_template(request: Request,
                                       {"request": request})
 
 
-@api_sales.get("/sales/", response_class=HTMLResponse)
-async def api_chart_of_account_template(request: Request,
+@api_sales.post("/sales/", response_class=HTMLResponse)
+async def api_sales_transaction(request: Request,
                                         username: str = Depends(get_current_user)):
     """This function is for posting accounting entries."""
     form = await request.form()
-
 
     # Get the current year
     current_year = datetime.now().year
@@ -42,23 +41,24 @@ async def api_chart_of_account_template(request: Request,
     journal_type = form.get('journal_type')
     reference = form.get('reference')
     description = form.get('description')
+    branch_id = form.get('branch_id')
 
     
-
+    print(trans_date,description)
     # this is for selecting General Ledger
     if journal_type == 'Sales' and reference is not None:
-        reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
+         reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
 
-        if reference_no:
-            # Extract the last number from the reference
-            ref_no = reference_no.reference  # Access the 'reference' field from the object
-            last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
+         if reference_no:
+             # Extract the last number from the reference
+             ref_no = reference_no.reference  # Access the 'reference' field from the object
+             last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
             
-            # Generate the new reference number by incrementing the last number
-            reference = f" Sales-{current_year}-{last_number + 1}"
-        else:
-            # If no reference exists, start with '1'
-            reference = f" Sales-{current_year}-1"
+             # Generate the new reference number by incrementing the last number
+             reference = f" Sales-{current_year}-{last_number + 1}"
+         else:
+             # If no reference exists, start with '1'
+             reference = f" Sales-{current_year}-1"
     
             
 
@@ -91,11 +91,11 @@ async def api_chart_of_account_template(request: Request,
             "transdate": trans_date, 
             "journal_type": journal_type,
             "reference": reference,
-            "reference": reference,
             "description": description, 
             "chart_of_account": account_title[i],
             "account_code_id": account_code_id[i],
             "chart_of_account_code": account_code[i],
+            "branch_id": int(branch_id),
             "debit": debit2,
             "credit": credit2,
             "user": username
@@ -113,13 +113,23 @@ async def api_chart_of_account_template(request: Request,
         for entry in result:
             try:
                 # Insert the entry into the database
-                JournalEntryViews.insert_journal_entry(**entry)
+                #JournalEntryViews.insert_journal_entry(**entry)
+                print(entry)
+                SalesViews.insert_sales(**entry,user=username)
+
+                messeges = ["Data Has been Save"]
+                return templates.TemplateResponse("accounting/sales.html", 
+                                                  {"request": request, "messeges": messeges})
+
+            
+
             except Exception as e:
                 messeges = [str(e)]
                 return templates.TemplateResponse("accounting/insert_journal_entry.html", 
                                                   {"request": request, "messeges": messeges})
 
-        # messeges = ["Data has been saved"]
+
+        
     else:
         messeges = ["Debit and Credit Not Balanced"]
 
@@ -154,3 +164,4 @@ async def update_sales_trans(profile_id: int, item: SalesBM,username: str = Depe
         return {"message": "Sales Transaction updated successfully"}
     else:
         raise HTTPException(status_code=404, detail="Profile not found")
+

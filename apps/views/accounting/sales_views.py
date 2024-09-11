@@ -1,6 +1,7 @@
 from sqlmodel import Field, Session,  create_engine,select,func,funcfilter,within_group,Relationship,Index
 
 from apps.models.accounting.sales import Sales
+from apps.models.accounting.journal_entry import JournalEntry
 from apps.database.databases import connectionDB
 from typing import Optional
 from datetime import date, datetime
@@ -22,12 +23,19 @@ class SalesViews(): # this class is for Customer
         item_data = item.dict()  # Assuming item is a Pydantic model
         item_data['user'] = user
         # Create an instance of AccountType using ** unpacking
-        insertData = Sales(**item_data)
+        insertJournal = JournalEntry(**kwargs)
         
+        insertData = Sales(**item_data)
+
 
         session = Session(engine)
 
+        session.add(insertJournal)
+        session.flush()
+        #modify insert add journal ID
+        insertData.journal_entry_code_id = insertJournal.id
         session.add(insertData)
+
         
         session.commit()
 

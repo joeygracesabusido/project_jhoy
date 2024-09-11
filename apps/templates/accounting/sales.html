@@ -21,6 +21,16 @@
 
     <div class="pagetitle">
       <h1>Sales Transaction</h1>
+	
+   <div class="container mt-3">
+                    {% for messege in messeges %}
+                    <div class="alert alert-danger" role="alert">
+                    {{ messege }}
+                    </div>
+                    {% endfor %}
+   </div>
+
+
       <!-- <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a >Home</a></li>
@@ -32,17 +42,21 @@
     <section class="section">
       <div class="row">
         <div class="col-lg-15">
+	
+			
 
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Sales Entry</h5>
 
               <!-- General Form Elements -->
-              <form>
+              <form method="POST">
+				
+
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-3 col-form-label"></label>
                   <div class="col-sm-9">
-                    <input type="text" id="id" class="form-control" hidden required>
+                    <input type="text" id="id" name="branch_id" class="form-control" hidden required>
                   
                   </div>
                 </div>
@@ -50,14 +64,14 @@
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-3 col-form-label">Branch</label>
                   <div class="col-sm-9">
-                    <input type="text" id="branch_name" class="form-control" required>
+                    <input type="text" id="branch_name" name="branch_name" class="form-control" required>
                   </div>
                 </div>
 
 				        <div class="row mb-3">
                   <label for="inputText" class="col-sm-3 col-form-label">Date</label>
                   <div class="col-sm-9">
-                    <input type="date" id="trans_date" class="form-control">
+                    <input type="date" id="trans_date" name="trans_date" class="form-control">
                   </div>
                 </div>
 
@@ -66,7 +80,7 @@
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-3 col-form-label">Journal</label>
                   <div class="col-sm-9">
-                     <select name="journal_type" id="journal_type"class="form-control">
+                     <select name="journal_type" id="journal_type" name="journal_type" class="form-control">
                       <option value="Sales">Sales</option>
                      </select>
                   </div>																										
@@ -77,7 +91,7 @@
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-3 col-form-label">Reference</label>
                   <div class="col-sm-9">
-                    <input type="text" id="reference" class="form-control">
+                    <input type="text" id="reference" name="reference" class="form-control">
                   </div>
                 </div>
 
@@ -88,7 +102,7 @@
 
                   <label for="inputPassword" class="col-sm-3 col-form-label">Description/Particular</label>
                   <div class="col-sm-9">
-                    <textarea class="form-control" id="description" style="height: 100px"></textarea>
+                    <textarea class="form-control" id="description" name="description" style="height: 100px"></textarea>
                   </div>
                 </div>
 				

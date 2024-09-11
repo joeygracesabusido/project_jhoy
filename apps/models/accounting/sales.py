@@ -27,7 +27,7 @@ class Sales(SQLModel, table=True):
     __tablename__ = 'sales'
     id: Optional[int] = Field(default=None, primary_key=True)
     journal_entry_code_id: Optional[int] = Field(default=None, foreign_key="journal_entry.id")
-    customer_profile_id: Optional[int] = Field(default=None, foreign_key="journal_entry.id")
+    customer_profile_id: Optional[int] = Field(default=None, foreign_key="csutomer_profile.id")
     user: str = Field(default = None)
     date_updated: Optional[datetime] = Field(default=None)
     date_created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

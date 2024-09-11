@@ -12,7 +12,8 @@ class JournalEntryBM(BaseModel):
     chart_of_account: str 
     account_code_id: int
     debit: float 
-    credit: float 
+    credit: float
+    branch_id: int
     user: str 
     date_updated: Optional[datetime]
     date_created: Optional[datetime]

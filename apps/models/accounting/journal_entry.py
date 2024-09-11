@@ -17,6 +17,9 @@ from datetime import date, datetime, timezone
 
 from apps.models.accounting.chart_of_account import ChartofAccount
 
+from apps.models.accounting.branch import Branch
+
+
 engine = connectionDB.conn()
 
 
@@ -33,6 +36,7 @@ class JournalEntry(SQLModel, table=True):
     account_code_id: Optional[int] = Field(default=None, foreign_key="chart_of_account.id")
     debit: float = Field(default = 0)
     credit: float = Field(default = 0)
+    branch_id:Optional[int] = Field(default=None, foreign_key="branch.id")
     user: str = Field(default = None)
     date_updated: Optional[datetime] = Field(default=None)
     date_created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -48,4 +52,4 @@ def create_db_and_tables():
     
     SQLModel.metadata.create_all(engine)
 
-# create_db_and_tables()
+create_db_and_tables()
