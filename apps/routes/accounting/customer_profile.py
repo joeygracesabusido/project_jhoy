@@ -51,3 +51,37 @@ async def update_customer_profile_api(profile_id: int, item: CustomerProfileBM,u
         return {"message": "Company profile updated successfully"}
     else:
         raise HTTPException(status_code=404, detail="Profile not found")
+
+@api_customer_profile.get("/api-autocomplete-vendor-customer/")
+async def autocomplete_contact(term: Optional[str] = None, username: str = Depends(get_current_user)):
+    try:
+        
+        contact = CustomerProfileViews.customer_profile()
+        
+        # Filter chart of accounts based on the search term
+        if term:
+            filtered_contact = [
+                item for item in contact
+                if term.lower() in item.bussiness_name.lower() or term.lower() in item.name_of_tax_payer.lower()
+            ]
+        else:
+            filtered_contact = contact  # If no term is provided, return all
+
+        # Construct suggestions from filtered chart of account data
+        suggestions = [
+            {
+                "value": f"{item.bussiness_name}",
+                "id": item.id,
+                
+            }
+            for item in filtered_contact
+        
+        ]
+
+        return suggestions
+
+    except Exception as e:
+        error_message = str(e)
+        raise HTTPException(status_code=500, detail=error_message)
+
+

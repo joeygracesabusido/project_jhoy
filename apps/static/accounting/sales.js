@@ -249,3 +249,40 @@ jQuery(document).ready(function($) {
     });
 });
 
+
+
+// Use jQuery in noConflict mode
+jQuery.noConflict();
+
+jQuery(document).ready(function($) {
+    // Initialize autocomplete on the element with ID "branch_name"
+    $(document).on('focus', '#supplier', function() {
+        $("#supplier").autocomplete({
+            source: function(request, response) {
+                // AJAX call to fetch data for the autocomplete suggestions
+                $.ajax({
+                    url: "/api-autocomplete-vendor-customer/",  // Your endpoint for fetching data
+                    data: { term: request.term },     // Send the user's input term to the server
+                    dataType: "json",                 // Expect a JSON response from the server
+                    success: function(data) {
+                        response(data);               // Pass the data to autocomplete
+                    },
+                    error: function(err) {
+                        console.error("Error fetching autocomplete data:", err);  // Log errors
+                        // Optionally, provide user feedback about the error
+                    }
+                });
+            },
+            minLength: 0,  // Minimum input length before triggering autocomplete
+            select: function(event, ui) {
+                // Set the selected value in the input field
+                $("#supplier").val(ui.item.value);
+                // Set the related field based on the selected item
+                $("#suppllier_id").val(ui.item.id);
+
+                return false; // Prevent the default select action
+            }
+        });
+    });
+});
+

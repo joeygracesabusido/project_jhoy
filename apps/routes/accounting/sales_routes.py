@@ -44,9 +44,9 @@ async def api_sales_transaction(request: Request,
     branch_id = form.get('branch_id')
 
     
-    print(trans_date,description)
+    #print(trans_date,description)
     # this is for selecting General Ledger
-    if journal_type == 'Sales' and reference is not None:
+    if journal_type == 'Sales':
          reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
 
          if reference_no:
@@ -112,16 +112,21 @@ async def api_sales_transaction(request: Request,
     if totalAmount == 0:
         for entry in result:
             try:
-                # Insert the entry into the database
-                #JournalEntryViews.insert_journal_entry(**entry)
-                print(entry)
-                SalesViews.insert_sales(**entry,user=username)
+			
+				
+                                  
+ 				 # Insert the JournalEntry first to get the ID
+                #journal_entry_id = SalesViews.insert_sales(**entry)  # Assuming this method returns the journal_entry_id
+                
+                # Add missing fields to the entry dictionary
+                #entry['journal_entry_code_id'] = journal_entry_id  # Set the foreign key with the inserted ID
+                item = form.get('customer_profile_id')  
 
-                messeges = ["Data Has been Save"]
-                return templates.TemplateResponse("accounting/sales.html", 
-                                                  {"request": request, "messeges": messeges})
+                # Create a SalesBM instance from the updated entry
+                
 
-            
+                # Pass the item to the insert_sales method
+                SalesViews.insert_sales(item=item, **entry)
 
             except Exception as e:
                 messeges = [str(e)]
@@ -129,7 +134,11 @@ async def api_sales_transaction(request: Request,
                                                   {"request": request, "messeges": messeges})
 
 
-        
+        #messeges = ["Data Has been Save"]
+        #return templates.TemplateResponse("accounting/sales.html", 
+        #                                          {"request": request, "messeges": messeges})
+
+
     else:
         messeges = ["Debit and Credit Not Balanced"]
 
@@ -153,6 +162,7 @@ async def get_sales(username: str = Depends(get_current_user)):
     try:
         profiles = SalesViews.sales_list()
         return profiles
+    
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Error retrieving profiles: {e}")
 
@@ -164,4 +174,6 @@ async def update_sales_trans(profile_id: int, item: SalesBM,username: str = Depe
         return {"message": "Sales Transaction updated successfully"}
     else:
         raise HTTPException(status_code=404, detail="Profile not found")
+
+
 
