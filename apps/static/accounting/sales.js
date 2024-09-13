@@ -278,7 +278,7 @@ jQuery(document).ready(function($) {
                 // Set the selected value in the input field
                 $("#supplier").val(ui.item.value);
                 // Set the related field based on the selected item
-                $("#suppllier_id").val(ui.item.id);
+                $("#supplier_id").val(ui.item.id);
 
                 return false; // Prevent the default select action
             }

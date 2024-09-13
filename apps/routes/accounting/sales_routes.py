@@ -120,17 +120,17 @@ async def api_sales_transaction(request: Request,
                 
                 # Add missing fields to the entry dictionary
                 #entry['journal_entry_code_id'] = journal_entry_id  # Set the foreign key with the inserted ID
-                item = form.get('customer_profile_id')  
+                item = form.get('supplier_id')  
 
                 # Create a SalesBM instance from the updated entry
                 
 
                 # Pass the item to the insert_sales method
-                SalesViews.insert_sales(item=item, **entry)
+                SalesViews.insert_sales(customer_id=item **entry)
 
             except Exception as e:
                 messeges = [str(e)]
-                return templates.TemplateResponse("accounting/insert_journal_entry.html", 
+                return templates.TemplateResponse("accounting/sales.html", 
                                                   {"request": request, "messeges": messeges})
 
 

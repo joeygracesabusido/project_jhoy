@@ -18,7 +18,7 @@ class SalesViews(): # this class is for Customer
 
    
     @staticmethod
-    def insert_sales(item: SalesBM, **kwargs):  # Accepts a Pydantic model instance and other kwargs
+    def insert_sales(customer_id, **kwargs):  # Accepts a Pydantic model instance and other kwargs
         session = Session(engine)
 
         # Create an instance of JournalEntry using **kwargs
@@ -32,12 +32,12 @@ class SalesViews(): # this class is for Customer
         journal_entry_id = insertJournal.id
 
         # Prepare Sales data with the journal_entry_id as a foreign key
-        sales_data = item.dict()  # Convert the Pydantic model to a dictionary
-        sales_data['journal_entry_code_id'] = journal_entry_id  # Set foreign key
-        sales_data['customer_profile_id'] = item.customer_profile_id  # Set additional fields if necessary
+    
+        #item['journal_entry_code_id'] = journal_entry_id  # Set foreign key
+        
 
         # Create an instance of Sales with the prepared data
-        insertData = Sales(**sales_data)
+        insertData = Sales(journal_entry_code_id=journal_entry_id,customer_profile_id=customer_id)
 
         # Add Sales to the session and commit
         session.add(insertData)
