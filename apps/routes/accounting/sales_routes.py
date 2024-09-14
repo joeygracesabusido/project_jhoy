@@ -44,18 +44,24 @@ async def api_sales_transaction(request: Request,
     branch_id = form.get('branch_id')
 
     
-    #print(trans_date,description)
+    
     # this is for selecting General Ledger
     if journal_type == 'Sales':
+         
          reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
 
          if reference_no:
              # Extract the last number from the reference
-             ref_no = reference_no.reference  # Access the 'reference' field from the object
-             last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
+            #  ref_no = reference_no.reference  # Access the 'reference' field from the object
+            #  last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
+
+            ref_no = reference_no.reference  # Example: 'Sales-2024-10'
+            parts = ref_no.split('-')
+            last_number = int(parts[-1])  # Extract the last number part
+            reference = f"Sales-{current_year}-{last_number + 1}"  # Increment the number
             
              # Generate the new reference number by incrementing the last number
-             reference = f" Sales-{current_year}-{last_number + 1}"
+            #  reference = f" Sales-{current_year}-{last_number + 1}"
          else:
              # If no reference exists, start with '1'
              reference = f" Sales-{current_year}-1"
@@ -92,13 +98,14 @@ async def api_sales_transaction(request: Request,
             "journal_type": journal_type,
             "reference": reference,
             "description": description, 
+            "user": username,
             "chart_of_account": account_title[i],
             "account_code_id": account_code_id[i],
             "chart_of_account_code": account_code[i],
             "branch_id": int(branch_id),
             "debit": debit2,
             "credit": credit2,
-            "user": username
+            
             
           
         })
@@ -109,34 +116,19 @@ async def api_sales_transaction(request: Request,
     # print(result)
     messeges = []
 
+    print(result)
+
     if totalAmount == 0:
         for entry in result:
-            try:
-			
-				
-                                  
- 				 # Insert the JournalEntry first to get the ID
-                #journal_entry_id = SalesViews.insert_sales(**entry)  # Assuming this method returns the journal_entry_id
-                
-                # Add missing fields to the entry dictionary
-                #entry['journal_entry_code_id'] = journal_entry_id  # Set the foreign key with the inserted ID
-                item = form.get('supplier_id')  
+            item = form.get('supplier_id')
 
-                # Create a SalesBM instance from the updated entry
-                
-
-                # Pass the item to the insert_sales method
-                SalesViews.insert_sales(customer_id=item **entry)
-
-            except Exception as e:
-                messeges = [str(e)]
-                return templates.TemplateResponse("accounting/sales.html", 
-                                                  {"request": request, "messeges": messeges})
-
-
-        #messeges = ["Data Has been Save"]
-        #return templates.TemplateResponse("accounting/sales.html", 
-        #                                          {"request": request, "messeges": messeges})
+            
+            
+            SalesViews.insert_sales_from_journal(customer_id=item,**entry)
+         
+        messeges = ["Data Has been Save"]
+        return templates.TemplateResponse("accounting/sales.html", 
+                                                 {"request": request, "messeges": messeges})
 
 
     else:

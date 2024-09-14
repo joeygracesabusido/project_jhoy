@@ -14,37 +14,67 @@ from apps.base_model.sales_bm import SalesBM
 engine = connectionDB.conn()
 
 
+
+
 class SalesViews(): # this class is for Customer
 
-   
     @staticmethod
-    def insert_sales(customer_id, **kwargs):  # Accepts a Pydantic model instance and other kwargs
+    def insert_sales(**kwargs):  # Accepts kwargs for JournalEntry
         session = Session(engine)
 
-        # Create an instance of JournalEntry using **kwargs
-        insertJournal = JournalEntry(**kwargs)
+        try:
+            # Create an instance of JournalEntry using **kwargs
+            insertJournal = JournalEntry(**kwargs)
 
-        # Add and commit the JournalEntry to get its ID
-        session.add(insertJournal)
-        session.commit()
+            # Add and commit the JournalEntry to get its ID
+            session.add(insertJournal)
+            session.commit()
 
-        # Retrieve the ID of the inserted JournalEntry
-        journal_entry_id = insertJournal.id
+            # Optionally refresh the session to get the generated ID
+            session.refresh(insertJournal)
 
-        # Prepare Sales data with the journal_entry_id as a foreign key
-    
-        #item['journal_entry_code_id'] = journal_entry_id  # Set foreign key
+            # Return the JournalEntry object (or its ID)
+            return {"journal_entry": insertJournal, "journal_entry_id": insertJournal.id,"user":insertJournal.user}
+
+        except Exception as e:
+            session.rollback()  # Rollback on error
+            raise e  # Optionally raise an error or handle it as needed
+
+        finally:
+            session.close()  # Always close the session
+
+
+    @staticmethod
+    def insert_sales_from_journal(customer_id,**kwargs):  # Accepts kwargs for JournalEntry
+        session = Session(engine)
         
+        try:
+          
+            result = SalesViews.insert_sales(**kwargs)
+            
+            # Access the journal entry ID from the result
+            journal_entry_id = result['journal_entry_id']
+            user_name = result['user']
+            
+            
+            print(f"Inserted Journal Entry ID: {journal_entry_id}")
+           
 
-        # Create an instance of Sales with the prepared data
-        insertData = Sales(journal_entry_code_id=journal_entry_id,customer_profile_id=customer_id)
+            insertData = Sales(
+                journal_entry_code_id=journal_entry_id,
+                customer_profile_id=customer_id,
+                user=user_name
+            )
 
-        # Add Sales to the session and commit
-        session.add(insertData)
-        session.commit()
+            session.add(insertData)
+            session.commit()
 
-        # Close the session
-        session.close()
+        except Exception as e:
+            session.rollback()
+            raise e  # Optionally handle the error as needed
+        finally:
+            session.close()
+   
     def sales_list(): # this function is to get a list of Sales
         with Session(engine) as session:
             try:

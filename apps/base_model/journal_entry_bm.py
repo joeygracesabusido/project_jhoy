@@ -14,7 +14,7 @@ class JournalEntryBM(BaseModel):
     debit: float 
     credit: float
     branch_id: int
-    user: str 
+    user: Optional[str] = None
     date_updated: Optional[datetime]
     date_created: Optional[datetime]
 
