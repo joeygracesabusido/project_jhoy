@@ -32,7 +32,9 @@ $(document).ready(function () {
                     name="account_code${x}" 
                     id="account_code${x}"
                     class="account_code"
+                    onchange="myFunction2()"
                     step="0.01"
+                    style="width: 100px;" 
                      />
                 </td>
                 <td style="padding: 0; margin: 0;">
@@ -41,8 +43,20 @@ $(document).ready(function () {
                         name="accountTitle${x}"
                         id="accountTitle${x}"
                         onchange="myFunction2()"
+                         style="width: 350px;" 
                     />
                 </td>
+
+                <td style="padding: 0; margin: 0;">
+                    <input
+                        type="number"
+                        name="ewt${x}"
+                        id="ewt${x}"
+                        onchange="myFunction2()"
+                         style="width: 120px;" 
+                    />
+                </td>
+
                 <td style="padding: 0; margin: 0;">
                     <input
                         type="text"
@@ -50,6 +64,8 @@ $(document).ready(function () {
                         id="amount${x}"
                         class="amount"
                         step="0.01"
+                        onchange="myFunction2()"
+                        style="width: 150px;" 
                     />
                 </td>
                 <td style="padding: 0; margin: 0;">
@@ -59,6 +75,8 @@ $(document).ready(function () {
                         id="credit_amount${x}"
                         class="credit_amount"
                         step="0.01"
+                        onchange="myFunction2()"
+                         style="width: 150px;" 
                     />
                 </td>
 
@@ -285,4 +303,65 @@ jQuery(document).ready(function($) {
         });
     });
 });
+
+
+//====================================This is for  ==================================== -->
+                                    
+$(document).ready(function() {
+    // Use event delegation to handle 'input' events for dynamically added fields
+    // $(document).on('input', 'input[name^="ewt"]','input[name^="accountTitle"]', function()
+    $(document).on('input', 'input[name^="ewt"]','input[name^="accountTitle"]', function() {
+        console.log($(this)); // Log the current element
+        // calculatelgl1();
+        // Get the value of the related 'accountTitle' input field in the same row
+        var chart_of_account = $(this).closest('tr').find('input[name^="accountTitle"]').val();
+
+        if (chart_of_account === 'Account Receivable' ||chart_of_account === 'Cash in Bank' ) 
+            {
+                calculatelgl1();
+        } else if (chart_of_account === 'Creditable With Holding Tax') {
+            calculateCWT()
+        } else {
+            $('input[name^="amount"]').val(0);
+        }
+    });
+});
+
+function calculatelgl1() {
+    let ewt;
+    let product;
+    var invoice_amount = $('#invoice_amount').val();
+    
+    // Get the value of all 'ewt' input fields
+    var ewt_amount_value = $('input[name^="ewt"]').toArray().reduce((sum, el) => {
+        return sum + parseFloat($(el).val()) || 0;
+    }, 0);
+
+    ewt = invoice_amount / 1.12 * ewt_amount_value;
+    product = parseFloat(invoice_amount) - parseFloat(ewt);
+    product = product.toFixed(2);
+    $('input[name^="amount"]').val(product);
+
+    console.log('EWT Amount Value:', ewt_amount_value);
+}
+
+
+function calculateCWT() {
+    let sales_amount;
+    let product;
+    var invoice_amount = $('#invoice_amount').val();
+    
+    // Get the value of all 'ewt' input fields
+    // var ewt_amount_value = $('input[name^="ewt"]').toArray().reduce((sum, el) => {
+    //     return sum + parseFloat($(el).val()) || 0;
+    // }, 0);
+
+    sales_amount = invoice_amount / 1.12 ;
+    
+    product = sales_amount.toFixed(2);
+    $('input[name^="amount"]').val(product);
+
+    
+}
+
 

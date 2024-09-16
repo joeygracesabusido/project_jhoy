@@ -13,7 +13,7 @@
 
 
 # Use a specific version of Python
-FROM python:3.10.5-slim
+FROM python:3.12.6-slim
 
 # Set the working directory in the container
 WORKDIR /code
@@ -31,4 +31,5 @@ COPY . .
 EXPOSE 7000
 
 # Command to run the application
-CMD ["uvicorn", "apps.main:app", "--host", "0.0.0.0", "--port", "7000", "--reload"]
+# CMD ["uvicorn", "apps.main:app", "--host", "0.0.0.0", "--port", "7000", "--reload"]
+CMD ["uvicorn", "apps.main:app",  "--port", "7000", "--reload"]
