@@ -1,3 +1,71 @@
+// this function is to identify for debit or credit amount
+function isDebit(account_title) {
+    if (account_title.includes('Account Receivable')|| account_title.includes('Cash') || account_title.includes('With Holding') ) {
+         return true;
+    } else {
+         return false;
+    }
+ }
+
+ function calculateAR(account_title,invoice_amount,ewt){
+    if (account_title.includes('Account Receivable')|| account_title.includes('Cash') ) {
+       
+        ewt_value = invoice_amount / 1.12 * ewt;
+        product = parseFloat(invoice_amount) - parseFloat(ewt_value);
+    
+        return product.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    
+   } 
+   else if(account_title.includes('With Holding')){
+        product = invoice_amount / 1.12 * ewt;
+
+        return product.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+   } else if(account_title.includes('Vat Out')){
+
+        
+        product = invoice_amount / 1.12 * .12
+        return product.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+   }else if(account_title.includes('Sales')){
+        if (ewt == '0'){
+            product = invoice_amount 
+            return product.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        }
+        else if ((ewt == '')){
+            product = invoice_amount 
+            return product.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        }
+
+        product = invoice_amount / 1.12 
+        return product.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+}
+
+       
+       
+ }
+
+
 
 $(document).ready(function () {
     var maxField = 10; // Input fields increment limitation
@@ -33,7 +101,7 @@ $(document).ready(function () {
                     name="account_code${x}" 
                     id="account_code${x}"
                     class="account_code"
-                    onchange="myFunction2()"
+                    
                     step="0.01"
                     style="width: 100px;" 
                      />
@@ -43,14 +111,14 @@ $(document).ready(function () {
                         type="text"
                         name="accountTitle${x}"
                         id="accountTitle${x}"
-                        onchange="myFunction2()"
+                        
                          style="width: 350px;" 
                     />
                 </td>
 
                 <td style="padding: 0; margin: 0;">
                     <input
-                        type="number"
+                        type="text"
                         name="ewt${x}"
                         id="ewt${x}"
                         max="100"
@@ -66,7 +134,7 @@ $(document).ready(function () {
                         class="amount"
                         step="0.01"
                         onchange="myFunction2()"
-                        style="width: 150px;" 
+                        style="width: 150px; text-align: right;""
                     />
                 </td>
                 <td style="padding: 0; margin: 0;">
@@ -77,7 +145,7 @@ $(document).ready(function () {
                         class="credit_amount"
                         step="0.01"
                         onchange="myFunction2()"
-                         style="width: 150px;" 
+                         style="width: 150px; text-align: right;"" 
                     />
                 </td>
 
@@ -109,7 +177,7 @@ $(document).ready(function () {
 
         $(wrapper).append(fieldHTML); // Add field HTML
 
-        var inputFieldForAccountCode = $(`#account_code${x}`); //account code field
+        var inputFieldForAccountTitle = $(`#accountTitle${x}`); //account code field
         var inputFieldForCredit = $(`#credit_amount${x}`); //credit field
         var inputFieldForDebit = $(`#amount${x}`); // debit field
         var witholding = $(`#ewt${x}`); // debit field
@@ -123,21 +191,29 @@ $(document).ready(function () {
             populateDebitOrCreditField($(this).val());
         });
 
-        //function to auto populate
-        function populateDebitOrCreditField(){
-            console.log('witholding value changed to:', witholding.val());
-            //replace true with the condition to check if
-            //inputFieldForAccountCode is for debit else for credit
-            if(true){
-                //replace the value with the formula 
-                inputFieldForDebit.val(amount.val());
-            }else{
-                //replace the value with the formula
-                inputFieldForCredit.val(amount.val());
+        function populateDebitOrCreditField() {
+            console.log('Withholding value changed to:', witholding.val());
+            // console.log(inputFieldForAccountTitle.val());
+            // console.log (isDebit(inputFieldForAccountTitle.val()))
+            // Check if the account title is for debit
+            if (isDebit(inputFieldForAccountTitle.val())) {
+                // Set the debit field value (replace with your formula as needed)
+                inputFieldForDebit.val(calculateAR(inputFieldForAccountTitle.val(),
+                amount.val(),witholding.val()));
+            } else {
+                // Set the credit field value (replace with your formula as needed)
+                inputFieldForCredit.val(calculateAR(inputFieldForAccountTitle.val(),
+                amount.val(),witholding.val()));
             }
         }
         
     });
+
+
+
+ 
+
+
 
     // Event delegation for input blur to handle formatting
     $(document).on('blur', 'input[name^="amount"], input[name^="credit_amount"]', function () {
@@ -376,22 +452,22 @@ function calculatelgl1() {
 }
 
 
-function calculateCWT() {
-    let sales_amount;
-    let product;
-    var invoice_amount = $('#invoice_amount').val();
+// function calculateCWT() {
+//     let sales_amount;
+//     let product;
+//     var invoice_amount = $('#invoice_amount').val();
     
-    // Get the value of all 'ewt' input fields
-    // var ewt_amount_value = $('input[name^="ewt"]').toArray().reduce((sum, el) => {
-    //     return sum + parseFloat($(el).val()) || 0;
-    // }, 0);
+//     // Get the value of all 'ewt' input fields
+//     // var ewt_amount_value = $('input[name^="ewt"]').toArray().reduce((sum, el) => {
+//     //     return sum + parseFloat($(el).val()) || 0;
+//     // }, 0);
 
-    sales_amount = invoice_amount / 1.12 ;
+//     sales_amount = invoice_amount / 1.12 ;
     
-    product = sales_amount.toFixed(2);
-    $('input[name^="amount"]').val(product);
+//     product = sales_amount.toFixed(2);
+//     $('input[name^="amount"]').val(product);
 
     
-}
+// }
 
 
