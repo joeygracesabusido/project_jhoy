@@ -3,6 +3,7 @@ $(document).ready(function () {
     var maxField = 10; // Input fields increment limitation
     var addButton = $('#add_button'); // Add button selector
     var wrapper = $('#addrow'); // Input field wrapper
+    var amount = $('#invoice_amount'); // Input field wrapper
     var x = 0; // Initial field counter
 
     // Function to format number with thousand separator
@@ -111,21 +112,30 @@ $(document).ready(function () {
         var inputFieldForAccountCode = $(`#account_code${x}`); //account code field
         var inputFieldForCredit = $(`#credit_amount${x}`); //credit field
         var inputFieldForDebit = $(`#amount${x}`); // debit field
+        var witholding = $(`#ewt${x}`); // debit field
 
-        //here is the on change detector for 
-        $(`#ewt${x}`).on('input', function() {
-            console.log('Input value changed to:', $(this).val());
-            
+        //here is the on change detector for witholding tax field
+        witholding.on('input', function() {
+            populateDebitOrCreditField($(this).val());
+        });
+        //here is the onchange detector for change of sales amount
+        amount.on('input',function(){
+            populateDebitOrCreditField($(this).val());
+        });
+
+        //function to auto populate
+        function populateDebitOrCreditField(){
+            console.log('witholding value changed to:', witholding.val());
             //replace true with the condition to check if
             //inputFieldForAccountCode is for debit else for credit
             if(true){
                 //replace the value with the formula 
-                inputFieldForDebit.val($(this).val());
+                inputFieldForDebit.val(amount.val());
             }else{
                 //replace the value with the formula
-                inputFieldForCredit.val($(this).val());
+                inputFieldForCredit.val(amount.val());
             }
-        });
+        }
         
     });
 
