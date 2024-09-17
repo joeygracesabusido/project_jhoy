@@ -108,7 +108,7 @@ $(document).ready(function () {
 
         $(wrapper).append(fieldHTML); // Add field HTML
 
-        var inputFieldForCredit = $(`#account_code${x}`); //account code field
+        var inputFieldForAccountCode = $(`#account_code${x}`); //account code field
         var inputFieldForCredit = $(`#credit_amount${x}`); //credit field
         var inputFieldForDebit = $(`#amount${x}`); // debit field
 
@@ -117,10 +117,12 @@ $(document).ready(function () {
             console.log('Input value changed to:', $(this).val());
             
             //replace true with the condition to check if
-            //account code is for debit else for credit
+            //inputFieldForAccountCode is for debit else for credit
             if(true){
+                //replace the value with the formula 
                 inputFieldForDebit.val($(this).val());
             }else{
+                //replace the value with the formula
                 inputFieldForCredit.val($(this).val());
             }
         });
