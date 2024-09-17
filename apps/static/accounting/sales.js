@@ -52,8 +52,8 @@ $(document).ready(function () {
                         type="number"
                         name="ewt${x}"
                         id="ewt${x}"
-                        onchange="myFunction2()"
-                         style="width: 120px;" 
+                        max="100"
+                        style="width: 120px;" 
                     />
                 </td>
 
@@ -107,6 +107,24 @@ $(document).ready(function () {
             </tr>`; // New input field HTML
 
         $(wrapper).append(fieldHTML); // Add field HTML
+
+        var inputFieldForCredit = $(`#account_code${x}`); //account code field
+        var inputFieldForCredit = $(`#credit_amount${x}`); //credit field
+        var inputFieldForDebit = $(`#amount${x}`); // debit field
+
+        //here is the on change detector for 
+        $(`#ewt${x}`).on('input', function() {
+            console.log('Input value changed to:', $(this).val());
+            
+            //replace true with the condition to check if
+            //account code is for debit else for credit
+            if(true){
+                inputFieldForDebit.val($(this).val());
+            }else{
+                inputFieldForCredit.val($(this).val());
+            }
+        });
+        
     });
 
     // Event delegation for input blur to handle formatting
@@ -307,25 +325,25 @@ jQuery(document).ready(function($) {
 
 //====================================This is for  ==================================== -->
                                     
-$(document).ready(function() {
-    // Use event delegation to handle 'input' events for dynamically added fields
-    // $(document).on('input', 'input[name^="ewt"]','input[name^="accountTitle"]', function()
-    $(document).on('input', 'input[name^="ewt"]','input[name^="accountTitle"]', function() {
-        console.log($(this)); // Log the current element
-        // calculatelgl1();
-        // Get the value of the related 'accountTitle' input field in the same row
-        var chart_of_account = $(this).closest('tr').find('input[name^="accountTitle"]').val();
+// $(document).ready(function() {
+//     // Use event delegation to handle 'input' events for dynamically added fields
+//     // $(document).on('input', 'input[name^="ewt"]','input[name^="accountTitle"]', function()
+//     $(document).on('input', 'input[name^="ewt"]','input[name^="accountTitle"]', function() {
+//         console.log($(this)); // Log the current element
+//         // calculatelgl1();
+//         // Get the value of the related 'accountTitle' input field in the same row
+//         var chart_of_account = $(this).closest('tr').find('input[name^="accountTitle"]').val();
 
-        if (chart_of_account === 'Account Receivable' ||chart_of_account === 'Cash in Bank' ) 
-            {
-                calculatelgl1();
-        } else if (chart_of_account === 'Creditable With Holding Tax') {
-            calculateCWT()
-        } else {
-            $('input[name^="amount"]').val(0);
-        }
-    });
-});
+//         if (chart_of_account === 'Account Receivable' ||chart_of_account === 'Cash in Bank' ) 
+//             {
+//                 calculatelgl1();
+//         } else if (chart_of_account === 'Creditable With Holding Tax') {
+//             calculateCWT()
+//         } else {
+//             $('input[name^="amount"]').val(0);
+//         }
+//     });
+// });
 
 function calculatelgl1() {
     let ewt;
