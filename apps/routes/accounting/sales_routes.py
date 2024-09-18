@@ -166,6 +166,15 @@ async def update_sales_trans(profile_id: int, item: SalesBM,username: str = Depe
         return {"message": "Sales Transaction updated successfully"}
     else:
         raise HTTPException(status_code=404, detail="Profile not found")
+    
+@api_sales.get("/api-get-sales-report/")
+async def get_sales_report(username: str = Depends(get_current_user)):
+    try:
+        profiles = SalesViews.sales_report_slsp()
+        return profiles
+    
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Error retrieving profiles: {e}")
 
 
 

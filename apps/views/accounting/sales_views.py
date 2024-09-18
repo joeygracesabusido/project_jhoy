@@ -2,6 +2,9 @@ from sqlmodel import Field, Session,  create_engine,select,func,funcfilter,withi
 
 from apps.models.accounting.sales import Sales
 from apps.models.accounting.journal_entry import JournalEntry
+from apps.models.accounting.customer_profile import CustomerProfile
+from apps.models.accounting.branch import Branch
+
 from apps.database.databases import connectionDB
 from typing import Optional
 from datetime import date, datetime
@@ -74,7 +77,7 @@ class SalesViews(): # this class is for Customer
             raise e  # Optionally handle the error as needed
         finally:
             session.close()
-   
+    @staticmethod
     def sales_list(): # this function is to get a list of Sales
         with Session(engine) as session:
             try:
@@ -89,7 +92,40 @@ class SalesViews(): # this class is for Customer
                 return data
             except :
                 return None
-            
+    
+    def sales_report_slsp():
+        with Session(engine) as session:
+            try:
+                # Adjust the query to join JournalEntry and Sales properly
+                statement = select(JournalEntry, Sales,Branch, CustomerProfile) \
+                    .join(Sales, Sales.journal_entry_code_id == JournalEntry.id) \
+                    .join(Branch, JournalEntry.branch_id == Branch.id)\
+                      .join(CustomerProfile, Sales.customer_profile_id == CustomerProfile.id)  # Correct the second join
+
+                # Execute the query
+                result = session.execute(statement).all()
+
+               
+                report = [
+                    {
+                        "date": journal.transdate,
+                        "branch": branch.branch_name,
+                        
+                        "customer_id": customer.bussiness_name,
+                        "chart_of_account": journal.chart_of_account,
+                        "debit_amount": journal.debit,
+                        "credit_amount": journal.credit
+                    }
+                    for journal, sales,branch, customer in result
+                ]
+
+                return report
+
+            except Exception as e:
+                # Return None or handle the error
+                print(f"Error occurred: {e}")
+                return None
+
    
     
     
