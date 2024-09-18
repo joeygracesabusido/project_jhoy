@@ -112,6 +112,8 @@ class SalesViews(): # this class is for Customer
                         "branch": branch.branch_name,
                         
                         "customer_id": customer.bussiness_name,
+                        "tin": customer.tin,
+                        "tax_type": customer.tax_type,
                         "chart_of_account": journal.chart_of_account,
                         "debit_amount": journal.debit,
                         "credit_amount": journal.credit
