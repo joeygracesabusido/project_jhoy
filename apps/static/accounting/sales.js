@@ -145,7 +145,7 @@ $(document).ready(function () {
                         class="credit_amount"
                         step="0.01"
                         onchange="myFunction2()"
-                         style="width: 150px; text-align: right;"" 
+                        style="width: 150px; text-align: right;"" 
                     />
                 </td>
 
@@ -192,7 +192,7 @@ $(document).ready(function () {
         });
 
         function populateDebitOrCreditField() {
-            console.log('Withholding value changed to:', witholding.val());
+            // console.log('Withholding value changed to:', witholding.val());
             // console.log(inputFieldForAccountTitle.val());
             // console.log (isDebit(inputFieldForAccountTitle.val()))
             // Check if the account title is for debit
@@ -432,42 +432,4 @@ jQuery(document).ready(function($) {
 //         }
 //     });
 // });
-
-function calculatelgl1() {
-    let ewt;
-    let product;
-    var invoice_amount = $('#invoice_amount').val();
-    
-    // Get the value of all 'ewt' input fields
-    var ewt_amount_value = $('input[name^="ewt"]').toArray().reduce((sum, el) => {
-        return sum + parseFloat($(el).val()) || 0;
-    }, 0);
-
-    ewt = invoice_amount / 1.12 * ewt_amount_value;
-    product = parseFloat(invoice_amount) - parseFloat(ewt);
-    product = product.toFixed(2);
-    $('input[name^="amount"]').val(product);
-
-    console.log('EWT Amount Value:', ewt_amount_value);
-}
-
-
-// function calculateCWT() {
-//     let sales_amount;
-//     let product;
-//     var invoice_amount = $('#invoice_amount').val();
-    
-//     // Get the value of all 'ewt' input fields
-//     // var ewt_amount_value = $('input[name^="ewt"]').toArray().reduce((sum, el) => {
-//     //     return sum + parseFloat($(el).val()) || 0;
-//     // }, 0);
-
-//     sales_amount = invoice_amount / 1.12 ;
-    
-//     product = sales_amount.toFixed(2);
-//     $('input[name^="amount"]').val(product);
-
-    
-// }
-
 

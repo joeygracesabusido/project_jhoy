@@ -3,7 +3,19 @@
 
 {% block content %}
 
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    
+    <!-- jQuery UI JavaScript -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> -->
 
 <link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.1.4/b-3.1.1/b-html5-3.1.1/datatables.min.css" rel="stylesheet">
  
@@ -22,7 +34,7 @@
 <div id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Journal Entry List</h1>
+      <h1>Sales Report</h1>
       <!-- <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a >Home</a></li>
@@ -37,7 +49,35 @@
             <div class="card">
                 <div class="card-header">
     
-                    Sales Entry List
+                    <div class="row mb-3">
+                        <label for="inputText" class="col-sm-3 col-form-label">Date From</label>
+                        <div class="col-sm-9">
+                            <input type="date" id="date_from" name="trans_date" >
+                        </div>																										
+                      
+
+                  
+                        <label for="inputText" class="col-sm-3 col-form-label">Date To</label>
+                        <div class="col-sm-9">
+                            <input type="date" id="date_to" name="date_to" >
+                        </div>	
+
+                        <label for="inputText" class="col-sm-3 col-form-label">Chart of Account</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="chart_of_account" name="chart_of_account" >
+                        </div>
+                        
+                        <label for="inputText" class="col-sm-3 col-form-label">Customer</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="customer_search" name="customer_search" >
+                        </div>	
+
+                        <label for="inputText" class="col-sm-3 col-form-label">Branch</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="branch_search" name="branch_search" >
+                        </div>	
+
+                    </div> 
                 <!--ELECTRICITY DATA
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="btn_insert_electric_data"
                     >
@@ -49,10 +89,10 @@
                     Add Inventory Item 
                 </button>
                  -->
-                <!-- <button type="button" class="btn btn-primary btn-right"  id="btn_update_hdmf_loan"
-                      data-bs-toggle="modal" >
-                    Update HDMF 
-                </button> -->
+                <button type="button" class="btn btn-primary btn-right"  id="btn_search"
+                       >
+                    Search 
+                </button>
         
                 </div>
                 <div class="card-body">

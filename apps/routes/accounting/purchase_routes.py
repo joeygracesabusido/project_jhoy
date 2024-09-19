@@ -10,8 +10,8 @@ from bson import ObjectId
 
 from datetime import datetime, timedelta, date
 from apps.authentication.authenticate_user import get_current_user
-from apps.base_model.sales_bm import SalesBM
-from apps.views.accounting.sales_views import SalesViews
+from apps.base_model.purchases_bm import PurchasesBM
+
 
 from apps.views.accounting.journal_entry_views import JournalEntryViews
 
@@ -21,7 +21,7 @@ from apps.views.accounting.sales_views import SalesViews
 api_sales = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
-@api_sales.get("/sales/", response_class=HTMLResponse)
+@api_sales.get("/purchase/", response_class=HTMLResponse)
 async def api_chart_of_account_template(request: Request,
                                         username: str = Depends(get_current_user)):
  
@@ -29,7 +29,7 @@ async def api_chart_of_account_template(request: Request,
                                       {"request": request})
 
 
-@api_sales.post("/sales/", response_class=HTMLResponse)
+@api_sales.post("/purchase/", response_class=HTMLResponse)
 async def api_sales_transaction(request: Request,
                                         username: str = Depends(get_current_user)):
     """This function is for posting accounting entries."""
@@ -141,15 +141,15 @@ async def api_sales_transaction(request: Request,
 
 
 
-@api_sales.post("/api-create-sales/", response_model=None)
-async def create_sales(item: SalesBM, username: str = Depends(get_current_user)):
+@api_sales.post("/api-create-pruchase/", response_model=None)
+async def create_sales(item: PurchasesBM, username: str = Depends(get_current_user)):
     try:
         SalesViews.insert_sales(item, user=username)
         return {"message": "Sales Transaction created successfully"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error creating profile: {e}")
 
-@api_sales.get("/api-get-sales-list/", response_model=List[SalesBM])
+@api_sales.get("/api-get-purchases-list/", response_model=List[PurchasesBM])
 async def get_sales(username: str = Depends(get_current_user)):
     try:
         profiles = SalesViews.sales_list()
@@ -158,8 +158,8 @@ async def get_sales(username: str = Depends(get_current_user)):
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Error retrieving profiles: {e}")
 
-@api_sales.put("/api-update-sales-transaction/", response_model=None)
-async def update_sales_trans(profile_id: int, item: SalesBM,username: str = Depends(get_current_user)):
+@api_sales.put("/api-update-purchases-transaction/", response_model=None)
+async def update_sales_trans(profile_id: int, item: PurchasesBM,username: str = Depends(get_current_user)):
     item.id = profile_id
     updated_profile = SalesViews.update_sales(item, user=username,date_update=datetime.now)
     if updated_profile:

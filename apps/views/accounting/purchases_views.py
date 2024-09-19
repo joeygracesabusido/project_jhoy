@@ -1,6 +1,6 @@
 from sqlmodel import Field, Session,  create_engine,select,func,funcfilter,within_group,Relationship,Index
 
-from apps.models.accounting.sales import Sales
+from apps.models.accounting.purchases import Purchases
 from apps.models.accounting.journal_entry import JournalEntry
 from apps.models.accounting.customer_profile import CustomerProfile
 from apps.models.accounting.branch import Branch
@@ -13,17 +13,17 @@ from datetime import date, datetime
 from sqlalchemy import and_
 
 
-from apps.base_model.sales_bm import SalesBM
+from apps.base_model.purchases_bm import PurchasesBM
 
 engine = connectionDB.conn()
 
 
 
 
-class SalesViews(): # this class is for Customer
+class PurchaseViews(): # this class is for Customer
 
     @staticmethod
-    def insert_sales(**kwargs):  # Accepts kwargs for JournalEntry
+    def insert_purchases(**kwargs):  # Accepts kwargs for JournalEntry
         session = Session(engine)
 
         try:
@@ -49,12 +49,12 @@ class SalesViews(): # this class is for Customer
 
 
     @staticmethod
-    def insert_sales_from_journal(customer_id,**kwargs):  # Accepts kwargs for JournalEntry
+    def insert_purchases_from_journal(customer_id,**kwargs):  # Accepts kwargs for JournalEntry
         session = Session(engine)
         
         try:
           
-            result = SalesViews.insert_sales(**kwargs)
+            result = PurchaseViews.insert_purchases(**kwargs)
             
             # Access the journal entry ID from the result
             journal_entry_id = result['journal_entry_id']
@@ -64,7 +64,7 @@ class SalesViews(): # this class is for Customer
             print(f"Inserted Journal Entry ID: {journal_entry_id}")
            
 
-            insertData = Sales(
+            insertData = Purchases(
                 journal_entry_code_id=journal_entry_id,
                 customer_profile_id=customer_id,
                 user=user_name
@@ -82,7 +82,7 @@ class SalesViews(): # this class is for Customer
     def sales_list(): # this function is to get a list of Sales
         with Session(engine) as session:
             try:
-                statement = select(Sales)
+                statement = select(Purchases)
 
                
                             
@@ -98,11 +98,11 @@ class SalesViews(): # this class is for Customer
         with Session(engine) as session:
             try:
                 # Adjust the query to join JournalEntry and Sales properly
-                statement = select(JournalEntry, Sales,Branch, ChartofAccount, CustomerProfile) \
-                    .join(Sales, Sales.journal_entry_code_id == JournalEntry.id) \
+                statement = select(JournalEntry, Purchases,Branch, ChartofAccount, CustomerProfile) \
+                    .join(Purchases, Purchases.journal_entry_code_id == JournalEntry.id) \
                     .join(Branch, JournalEntry.branch_id == Branch.id)\
                     .join(ChartofAccount,JournalEntry.account_code_id == ChartofAccount.id)\
-                      .join(CustomerProfile, Sales.customer_profile_id == CustomerProfile.id)  # Correct the second join
+                      .join(CustomerProfile, Purchases.customer_profile_id == CustomerProfile.id)  # Correct the second join
 
                 # Execute the query
                 result = session.execute(statement).all()
@@ -120,7 +120,7 @@ class SalesViews(): # this class is for Customer
                         "debit_amount": journal.debit,
                         "credit_amount": journal.credit
                     }
-                    for journal, sales,branch,ChartofAccount, customer in result
+                    for journal, Purchases,branch,ChartofAccount, customer in result
                 ]
 
                 return report
@@ -135,12 +135,12 @@ class SalesViews(): # this class is for Customer
     
             
     @staticmethod
-    def update_sales(item: SalesBM,user:str,date_update:datetime):
+    def update_sales(item: PurchasesBMBM,user:str,date_update:datetime):
       
         with Session(engine) as session:
             try:
                 # Find the record to update
-                statement = select(Sales).where(Sales.id == item.id)
+                statement = select(Purchases).where(Purchases.id == item.id)
                 
                 result = session.exec(statement).one_or_none()
                 
