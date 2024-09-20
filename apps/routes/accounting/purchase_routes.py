@@ -16,20 +16,20 @@ from apps.base_model.purchases_bm import PurchasesBM
 from apps.views.accounting.journal_entry_views import JournalEntryViews
 
 
-from apps.views.accounting.sales_views import SalesViews
+from apps.views.accounting.purchases_views import PurchaseViews
 
-api_sales = APIRouter()
+api_purchases = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
 
-@api_sales.get("/purchase/", response_class=HTMLResponse)
+@api_purchases.get("/purchase/", response_class=HTMLResponse)
 async def api_chart_of_account_template(request: Request,
                                         username: str = Depends(get_current_user)):
  
-    return templates.TemplateResponse("accounting/sales.html", 
+    return templates.TemplateResponse("accounting/purchases.html", 
                                       {"request": request})
 
 
-@api_sales.post("/purchase/", response_class=HTMLResponse)
+@api_purchases.post("/purchase/", response_class=HTMLResponse)
 async def api_sales_transaction(request: Request,
                                         username: str = Depends(get_current_user)):
     """This function is for posting accounting entries."""
@@ -46,7 +46,7 @@ async def api_sales_transaction(request: Request,
     
     
     # this is for selecting General Ledger
-    if journal_type == 'Sales':
+    if journal_type == 'Purchases':
          
          reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
 
@@ -58,13 +58,13 @@ async def api_sales_transaction(request: Request,
             ref_no = reference_no.reference  # Example: 'Sales-2024-10'
             parts = ref_no.split('-')
             last_number = int(parts[-1])  # Extract the last number part
-            reference = f"Sales-{current_year}-{last_number + 1}"  # Increment the number
+            reference = f"Purchases-{current_year}-{last_number + 1}"  # Increment the number
             
              # Generate the new reference number by incrementing the last number
             #  reference = f" Sales-{current_year}-{last_number + 1}"
          else:
              # If no reference exists, start with '1'
-             reference = f" Sales-{current_year}-1"
+             reference = f" Purchases-{current_year}-1"
     
             
 
@@ -124,10 +124,10 @@ async def api_sales_transaction(request: Request,
 
             
             
-            SalesViews.insert_sales_from_journal(customer_id=item,**entry)
+            PurchaseViews.insert_purchases_from_journal(customer_id=item,**entry)
          
         messeges = ["Data Has been Save"]
-        return templates.TemplateResponse("accounting/sales.html", 
+        return templates.TemplateResponse("accounting/purchases.html", 
                                                  {"request": request, "messeges": messeges})
 
 
@@ -141,27 +141,27 @@ async def api_sales_transaction(request: Request,
 
 
 
-@api_sales.post("/api-create-pruchase/", response_model=None)
-async def create_sales(item: PurchasesBM, username: str = Depends(get_current_user)):
+@api_purchases.post("/api-create-purchase/", response_model=None)
+async def create_purchases(item: PurchasesBM, username: str = Depends(get_current_user)):
     try:
-        SalesViews.insert_sales(item, user=username)
-        return {"message": "Sales Transaction created successfully"}
+        PurchaseViews.insert_purchases(item, user=username)
+        return {"message": "Purchases Transaction created successfully"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error creating profile: {e}")
 
-@api_sales.get("/api-get-purchases-list/", response_model=List[PurchasesBM])
+@api_purchases.get("/api-get-purchases-list/", response_model=List[PurchasesBM])
 async def get_sales(username: str = Depends(get_current_user)):
     try:
-        profiles = SalesViews.sales_list()
+        profiles = PurchaseViews.get
         return profiles
     
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Error retrieving profiles: {e}")
 
-@api_sales.put("/api-update-purchases-transaction/", response_model=None)
+@api_purchases.put("/api-update-purchases-transaction/", response_model=None)
 async def update_sales_trans(profile_id: int, item: PurchasesBM,username: str = Depends(get_current_user)):
     item.id = profile_id
-    updated_profile = SalesViews.update_sales(item, user=username,date_update=datetime.now)
+    updated_profile = PurchaseViews.update_purchases(item, user=username,date_update=datetime.now)
     if updated_profile:
         return {"message": "Sales Transaction updated successfully"}
     else:

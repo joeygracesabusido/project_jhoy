@@ -79,7 +79,7 @@ class PurchaseViews(): # this class is for Customer
         finally:
             session.close()
     @staticmethod
-    def sales_list(): # this function is to get a list of Sales
+    def purchase_list(): # this function is to get a list of Sales
         with Session(engine) as session:
             try:
                 statement = select(Purchases)
@@ -94,7 +94,7 @@ class PurchaseViews(): # this class is for Customer
             except :
                 return None
     
-    def sales_report_slsp():
+    def purchase_report_slsp():
         with Session(engine) as session:
             try:
                 # Adjust the query to join JournalEntry and Sales properly
@@ -135,7 +135,7 @@ class PurchaseViews(): # this class is for Customer
     
             
     @staticmethod
-    def update_sales(item: PurchasesBMBM,user:str,date_update:datetime):
+    def update_purchases(item: PurchasesBM,user:str,date_update:datetime):
       
         with Session(engine) as session:
             try:

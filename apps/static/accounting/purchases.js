@@ -1,69 +1,78 @@
 // this function is to identify for debit or credit amount
 function isDebit(account_title) {
-    if (account_title.includes('Account Receivable')|| account_title.includes('Cash') || account_title.includes('With Holding') ) {
-         return true;
-    } else {
-         return false;
+    // Ensure account_title is not undefined or null before proceeding
+    if (account_title.toLowerCase().includes('input') 
+        || (account_title.toLowerCase().includes('purch') ))
+     {
+      return true;
+    } 
+  
+   else {
+      return false;
     }
- }
+  }
 
  function calculateAR(account_title,invoice_amount,ewt){
-    if (account_title.includes('Account Receivable')|| account_title.includes('Cash') ) {
+   
+
+    if  (
+        // account_title.toLowerCase().includes('purchase') || 
+        // account_title.toLowerCase().includes('exp') 
+        account_title.toLowerCase().includes('input')
+        //  && account_title.toLowerCase().includes('expanded')
+      ) 
+     {
        
-        ewt_value = invoice_amount / 1.12 * ewt / 100;
-        product = parseFloat(invoice_amount) - parseFloat(ewt_value);
+        input_tax = invoice_amount / 1.12 * .12;
+        product = parseFloat(input_tax);
     
         return product.toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
     
-   } 
-   else if(account_title.includes('With Holding')){
-        product = invoice_amount / 1.12 * ewt/100;
+   } else if (account_title.toLowerCase().includes('purchases')){
+        purchase_amount = invoice_amount / 1.12 ;
+        product = parseFloat(purchase_amount);
 
         return product.toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
-        });
+    });
 
-   } else if(account_title.includes('Vat Out')){
+   } else if (account_title.toLowerCase().includes('payable')
+             || (account_title.toLowerCase().includes('cash'))){
+               
+                // with_holdingTax = parseFloat(invoice_amount) / 1.12 * parseFloat(ewt/100);
+                console.log(parseFloat(ewt))
+                with_holdingTax = parseFloat(invoice_amount) / 1.12 * parseFloat(ewt/100);
+                console.log(with_holdingTax)
+                purchase_amount = parseFloat(invoice_amount) - parseFloat(with_holdingTax) ;
+                product = parseFloat(purchase_amount);
 
-        
-        product = invoice_amount / 1.12 * .12
+    return product.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    } 
+    else if (account_title.toLowerCase().includes('expanded')){
+        purchase_amount = parseFloat(invoice_amount / 1.12) * parseFloat(ewt/100);
+        product = parseFloat(purchase_amount);
+    
         return product.toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
-        });
-
-   }else if(account_title.includes('Sales')){
-        if (ewt == '0'){
-            product = invoice_amount 
-            return product.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-
-        }
-        else if ((ewt == '')){
-            product = invoice_amount 
-            return product.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-
-        }
-
-        product = invoice_amount / 1.12 
-        return product.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+    });
+    
+    }
+  
+   
 }
 
        
        
- }
+ 
 
 
 
@@ -432,3 +441,4 @@ jQuery(document).ready(function($) {
 //         }
 //     });
 // });
+

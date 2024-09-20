@@ -54,22 +54,24 @@ class BranchViews(): # this class is for User
     
             
     @staticmethod
-    def update_user(item: BranchBM):
+    def update_branch(item: BranchBM,user: str):
       
         with Session(engine) as session:
             try:
                 # Find the record to update
                 statement = select(Branch).where(Branch.id == item.id)
                 result = session.exec(statement).one_or_none()
+
+                # item_data = item.dict()  # Assuming item is a Pydantic model
+                # item_data['user'] = user
                 
                 if result:
                     # Update the record's account_type
                    
-                  
-                    
+                 
                     result.branch_name = item.branch_name
                     result.address = item.address
-                    result.user = item.user
+                    result.user = user
                     result.date_updated = item.date_updated
                    
                     

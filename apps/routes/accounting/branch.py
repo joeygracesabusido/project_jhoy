@@ -39,7 +39,7 @@ async def get_api_branches(username: str = Depends(get_current_user)):
 @api_branch.put("/api-update-branch/{branch_id}", response_model=None)
 async def update_branch(branch_id: int, item: BranchBM, username: str = Depends(get_current_user)):
     item.id = branch_id
-    updated_branch = BranchViews.update_branch(item)
+    updated_branch = BranchViews.update_branch(item,user=username)
     if updated_branch:
         return {"message": "Branch updated successfully"}
     else:
