@@ -6,6 +6,7 @@ from apps.models.accounting.customer_profile import CustomerProfile
 from apps.models.accounting.branch import Branch
 from apps.models.accounting.chart_of_account import ChartofAccount
 
+
 from apps.database.databases import connectionDB
 from typing import Optional
 from datetime import date, datetime
