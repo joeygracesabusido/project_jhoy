@@ -109,12 +109,12 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 // Clear existing table rows
-                $('#table_sales_report_list').empty();
+                $('#table_purchase_report_list').empty();
 
                 // Populate table with the data
                 console.log(data)
                 data.forEach(function(entry) {
-                    $('#table_sales_report_list').append(
+                    $('#table_purchase_report_list').append(
                         '<tr>' +
                             '<td>' + entry.date + '</td>' +
                             '<td>' + entry.branch + '</td>' +

@@ -17,7 +17,7 @@ from apps.base_model.sales_bm import SalesBM
 from apps.views.accounting.journal_entry_views import JournalEntryViews
 
 
-from apps.views.accounting.sales_views import SalesViews
+from apps.views.accounting.purchases_views import PurchaseViews
 
 api_purchase_report = APIRouter()
 templates = Jinja2Templates(directory="apps/templates")
@@ -26,7 +26,7 @@ templates = Jinja2Templates(directory="apps/templates")
 async def get_sales_report(request: Request,
                                         username: str = Depends(get_current_user)):
  
-    return templates.TemplateResponse("accounting/sales_report.html", 
+    return templates.TemplateResponse("accounting/purchase_report.html", 
                                       {"request": request})
 
 @api_purchase_report.get("/api-get-purchase-report/")
@@ -39,7 +39,7 @@ async def get_sales_report(
     username: str = Depends(get_current_user)
 ):
     try:
-        profiles = SalesViews.sales_report_slsp()
+        profiles = PurchaseViews.purchase_report_slsp()
 
         # Print profiles for debugging
         # print("All profiles:", profiles)
