@@ -108,66 +108,49 @@
               </div>
 
               <div class="text-center">
-                <button type="button" class="btn btn-primary">Add</button>
+                <button id="btn_save_branch" type="button" class="btn btn-primary">Add</button>
+                <button
+                  type="button"
+                  id="btn_update_branch"
+                  class="btn btn-danger"
+                  style="display: none;"
+                >
+                  Cancel
+                </button>
               </div>
             </form>
             <!-- End General Form Elements -->
-            <script>
-              let bussiness_name = "";
-              let name_of_tax_payer = "";
-              let tin = "";
-              let rdo = "";
-              let address = "";
-              let tax_type = "Vatable";
-              let description = "Customer";
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Customer List</h5>
 
-              const bussiness_name_el =
-                document.getElementById("bussiness_name");
-              const name_of_tax_payer_el =
-                document.getElementById("name_of_tax_payer");
-              const tin_el = document.getElementById("tin");
-              const rdo_el = document.getElementById("rdo");
-              const address_el = document.getElementById("address");
-
-              const tax_type_el = document.getElementById("tax_type");
-              const description_el = document.getElementById("description");
-
-              bussiness_name_el.addEventListener("input", function (event) {
-                bussiness_name = event.target.value;
-                console.log("bussiness_name", bussiness_name);
-              });
-              name_of_tax_payer_el.addEventListener("input", function (event) {
-                name_of_tax_payer = event.target.value;
-                console.log(name_of_tax_payer);
-              });
-              tin_el.addEventListener("input", function (event) {
-                tin = event.target.value;
-                console.log(tin);
-              });
-              rdo_el.addEventListener("input", function (event) {
-                rdo = event.target.value;
-                console.log(rdo);
-              });
-              address_el.addEventListener("input", function (event) {
-                address = event.target.value;
-                console.log(address);
-              });
-
-              tax_type_el.addEventListener("change", function (event) {
-                tax_type = event.target.value;
-                console.log(tax_type);
-              });
-              description_el.addEventListener("change", function (event) {
-                description = event.target.value;
-                console.log(description);
-              });
-            </script>
+            <!-- General Form Elements -->
+            <table
+              id="table_customer"
+              class="table table-bordered"
+              style="text-align: center"
+            >
+              <thead class="table-dark">
+                <tr>
+                  <td>#</td>
+                  <td>Business Name</td>
+                  <td>Description</td>
+                </tr>
+              </thead>
+              <tbody id="table_customer_list"></tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </section>
+  <script src="/static/accounting/customer.js"></script>
 </div>
+
 <!-- End #main -->
 
 {% endblock %}
