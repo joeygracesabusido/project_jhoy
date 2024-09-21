@@ -131,7 +131,7 @@ $(document).ready(function() {
 
                 // Initialize DataTables for the table (optional, if you want to use DataTables)
                 // $('#table_sales_report').DataTable();
-                // initializeDataTable2()
+                initializeDataTable2()
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching data:', error);
@@ -148,15 +148,15 @@ $(document).ready(function() {
 // this is for DataTable
 const initializeDataTable2 = () => {
 
-    new DataTable('#table_sales_report', {
+    new DataTable('#table_purchase_report', {
         layout: {
             topStart: 'buttons'
         },
         buttons: [{
             extend: 'copy',
             text: 'Copy to Clipboard', // Button label
-            title: 'Trial Balance Report', // Title for the copied data
-            filename: 'Trial_Balance_Report', // Custom filename
+            title: 'Purchase Report', // Title for the copied data
+            filename: 'Purchase Report', // Custom filename
             exportOptions: {
                 columns: ':visible' // Export only visible columns
             }
@@ -164,8 +164,8 @@ const initializeDataTable2 = () => {
         {
             extend: 'csv',
             text: 'Export to CSV', // Button label
-            title: 'Trial Balance Report', // Title in CSV file
-            filename: 'Trial_Balance_Report', // Custom filename without file extension
+            title: 'Purchase Report', // Title in CSV file
+            filename: 'Purchase Report', // Custom filename without file extension
             exportOptions: {
                 columns: ':visible' // Export only visible columns
             }

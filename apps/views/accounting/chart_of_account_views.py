@@ -38,8 +38,7 @@ class ChartofAccountViews(): # this class is for Type of Account
             try:
                 statement = select(ChartofAccount).order_by(ChartofAccount.chart_of_account_code)
 
-               
-                            
+             
                 results = session.exec(statement) 
 
                 data = results.all()

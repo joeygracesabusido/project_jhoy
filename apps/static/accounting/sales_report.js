@@ -91,6 +91,9 @@ $(document).ready(function() {
         var branch = $('#branch_search').val();
         var chart_of_account = $('#chart_of_account').val();
 
+         // Clear existing table rows
+            // $('#table_sales_report_list').empty();
+
         // console.log(dateFrom,dateTo)
         // Build the URL with query parameters
         var url = '/api-get-sales-report/?';
@@ -128,10 +131,14 @@ $(document).ready(function() {
                     );
 
                 });
+                // Destroy existing DataTable before re-initializing
+                    // if ($.fn.DataTable.isDataTable('#table_sales_report')) {
+                    //     $('#table_sales_report').DataTable().destroy();
+                    // }
 
                 // Initialize DataTables for the table (optional, if you want to use DataTables)
                 // $('#table_sales_report').DataTable();
-                // initializeDataTable2()
+                initializeDataTable2()
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching data:', error);
@@ -155,8 +162,8 @@ const initializeDataTable2 = () => {
         buttons: [{
             extend: 'copy',
             text: 'Copy to Clipboard', // Button label
-            title: 'Trial Balance Report', // Title for the copied data
-            filename: 'Trial_Balance_Report', // Custom filename
+            title: 'Sales Report', // Title for the copied data
+            filename: 'Sales Report', // Custom filename
             exportOptions: {
                 columns: ':visible' // Export only visible columns
             }
@@ -164,8 +171,8 @@ const initializeDataTable2 = () => {
         {
             extend: 'csv',
             text: 'Export to CSV', // Button label
-            title: 'Trial Balance Report', // Title in CSV file
-            filename: 'Trial_Balance_Report', // Custom filename without file extension
+            title: 'Sales Report', // Title in CSV file
+            filename: 'Sales Report', // Custom filename without file extension
             exportOptions: {
                 columns: ':visible' // Export only visible columns
             }
