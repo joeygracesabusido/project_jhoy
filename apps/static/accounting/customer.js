@@ -1,4 +1,4 @@
-getBranch();
+getCustomer();
 let isUpdating = false;
 let customer_list = {};
 let selectedCustomer = null;
@@ -17,41 +17,12 @@ const name_of_tax_payer_el = $("#name_of_tax_payer");
 const tin_el = $("#tin");
 const rdo_el = $("#rdo");
 const address_el = $("#address");
-
 const tax_type_el = $("#tax_type");
 const description_el = $("#description");
 
-bussiness_name_el.addEventListener("input", function (event) {
-  bussiness_name = event.target.value;
-  console.log("bussiness_name", bussiness_name);
-});
-name_of_tax_payer_el.addEventListener("input", function (event) {
-  name_of_tax_payer = event.target.value;
-  console.log(name_of_tax_payer);
-});
-tin_el.addEventListener("input", function (event) {
-  tin = event.target.value;
-  console.log(tin);
-});
-rdo_el.addEventListener("input", function (event) {
-  rdo = event.target.value;
-  console.log(rdo);
-});
-address_el.addEventListener("input", function (event) {
-  address = event.target.value;
-  console.log(address);
-});
 
-tax_type_el.addEventListener("change", function (event) {
-  tax_type = event.target.value;
-  console.log(tax_type);
-});
-description_el.addEventListener("change", function (event) {
-  description = event.target.value;
-  console.log(description);
-});
 
-async function getBranch() {
+async function getCustomer() {
   try {
     const response = await fetch(`/api-get-customer-profiles/`, {
       method: "GET",
@@ -74,7 +45,7 @@ async function getBranch() {
     }
   } catch (error) {
     console.error("An error occurred:", error);
-    alert("An error occurred while fetching the branches.");
+    alert("An error occurred while fetching the customers.");
   }
 }
 
@@ -84,6 +55,7 @@ function makeBranchRow(index, data) {
   }')">
   <td>${data.id}</td>
   <td>${data.bussiness_name}</td>
+  <td>${data.tax_type}</td>
   <td>${data.description}</td>
 </tr>`;
 }
@@ -101,6 +73,7 @@ function isDoubleClick() {
   }
 }
 
+
 function openToEdit(index, customer_row_id) {
   if (isDoubleClick() === true) {
     isUpdating = true;
@@ -116,18 +89,87 @@ function openToEdit(index, customer_row_id) {
     address_el.val(data.address);
     tax_type_el.val(data.tax_type);
     description_el.val(data.description);
-    $("#id").val(data.id);
+    selectedCustomer = data;
+    console.log(selectedCustomer.id);
     $(`#${customer_row_id}`).addClass("table-primary");
+  }
+}
+
+async function saveOrUpdateCustomer() {
+  // const branchName = $("#branchName").val();
+  // const branchAddress = $("#branchAddress").val();
+  const bussiness_name= bussiness_name_el.val();
+  const name_of_tax_payer= name_of_tax_payer_el.val();
+  const tin= tin_el.val(); // Replace with actual user if needed
+  const  rdo=rdo_el.val();
+  const address=address_el.val();
+  const tax_type=tax_type_el.val();
+  const description=description_el.val();
+  // Validate inputs
+  if (!bussiness_name || !name_of_tax_payer||!tin || !rdo||!address || !tax_type||!description ) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  // Create data object to send to the API
+  const customerData = {
+    bussiness_name: bussiness_name,
+    name_of_tax_payer: name_of_tax_payer,
+    tin: tin, // Replace with actual user if needed
+    rdo:rdo,
+    address:address,
+    tax_type:tax_type,
+    description:description,
+  };
+
+  if (!isUpdating) {
+    // Add new branch (POST)
+    $.ajax({
+      url: "/api-insert-customer_profile/",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(customerData),
+      success: function (response) {
+        alert(response.message);
+        window.location.href = "/customer_profile/";
+       
+        getCustomer();  // Refresh branch list
+
+      },
+      error: function (xhr) {
+        const errorDetail = xhr.responseJSON?.detail || "An error occurred";
+        alert(`Error: ${errorDetail}`);
+      },
+    });
+  } else {
+    // Update existing branch (PUT)
+    customerData.id = selectedCustomer.id;  // Get the ID of the branch being updated
+    
+    $.ajax({
+      url: `/api-update-customer-profile/?profile_id=${customerData.id}`,
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify(customerData),
+      success: function (response) {
+        alert(response.message);
+        window.location.href = "/customer_profile/";
+        isUpdating = false;
+        $("#btn_save_branch").text('Add');
+        getCustomer();  // Refresh branch list
+      },
+      error: function (xhr) {
+        const errorDetail = xhr.responseJSON?.detail || "An error occurred";
+        alert(`Error: ${errorDetail}`);
+      },
+    });
   }
 }
 
 $(document).ready(function () {
   // Initial fetch of branch data
-  getBranch();
+  getCustomer();
 
   // // Handle save (add or update) button click
-  // $("#btn_save_branch").click(saveOrUpdateBranch);
+  $("#btn_save_branch").click(saveOrUpdateCustomer);
 
-  // // Handle reset button click (to cancel update and reset form)
-  // $("#btn_update_branch").click(resetForm);
 });
