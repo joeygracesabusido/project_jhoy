@@ -3,20 +3,20 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from typing import Union, List, Optional
 from pydantic import BaseModel
-from bson import ObjectId
+#from bson import ObjectId
 
 from decimal import Decimal
 
 
-from pymongo import  DESCENDING
+#from pymongo import  DESCENDING
 
 
 from datetime import datetime, timedelta, date
 from  ..authentication.authenticate_user import get_current_user
 
 
-from  ..database.mongodb import create_mongo_client
-mydb = create_mongo_client()
+#from  ..database.mongodb import create_mongo_client
+#mydb = create_mongo_client()
 
 
 from ..authentication.utils import OAuth2PasswordBearerWithCookie

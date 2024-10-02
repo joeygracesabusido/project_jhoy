@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 from apps.authentication.authenticate_user import get_current_user
 
 
-from  ..database.mongodb import create_mongo_client
-mydb = create_mongo_client()
+#from  ..database.mongodb import create_mongo_client
+#mydb = create_mongo_client()
 
 
 from ..authentication.utils import OAuth2PasswordBearerWithCookie

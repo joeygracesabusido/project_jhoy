@@ -122,6 +122,7 @@ $(document).ready(function() {
                             '<td>' + entry.tin + '</td>' +
                             '<td>' + entry.tax_type + '</td>' +
                             '<td>' + entry.chart_of_account + '</td>' +
+                            '<td>' + entry.description + '</td>' +
                             '<td>' + entry.debit_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td>' +
                             '<td>' + entry.credit_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td>' +
                         '</tr>'

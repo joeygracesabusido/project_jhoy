@@ -7,10 +7,10 @@ from fastapi.responses import JSONResponse
 
 from pydantic import BaseModel
 
-from  ..database.mongodb import create_mongo_client
-mydb = create_mongo_client()
+#from  ..database.mongodb import create_mongo_client
+#mydb = create_mongo_client()
 
-from bson import ObjectId
+#from bson import ObjectId
 
 from  ..authentication.authenticate_user import get_current_user
 

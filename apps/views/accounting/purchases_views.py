@@ -118,6 +118,7 @@ class PurchaseViews(): # this class is for Customer
                         "tin": customer.tin,
                         "tax_type": customer.tax_type,
                         "chart_of_account": ChartofAccount.chart_of_account,
+                        "description": journal.description,
                         "debit_amount": journal.debit,
                         "credit_amount": journal.credit
                     }

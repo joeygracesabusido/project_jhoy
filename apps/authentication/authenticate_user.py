@@ -5,8 +5,8 @@ from datetime import datetime, date , timedelta
 from fastapi import APIRouter, Body, HTTPException, Depends, Request, Response, status
 from jose import jwt
 
-from  ..database.mongodb import create_mongo_client
-mydb = create_mongo_client()
+#from  ..database.mongodb import create_mongo_client
+#mydb = create_mongo_client()
 
 
 from apps.views.sign_up_views import UserViews
