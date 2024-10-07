@@ -1,6 +1,7 @@
 from sqlmodel import Field, Session,  create_engine,select,func,funcfilter,within_group,Relationship,Index
 
 from apps.models.accounting.journal_entry import JournalEntry
+from apps.models.accounting.account_type import AccountType
 from apps.models.accounting.chart_of_account import ChartofAccount
 from apps.database.databases import connectionDB
 from typing import Optional, List, Dict
@@ -145,6 +146,49 @@ class JournalEntryViews(): # this class is for Type of Account
             except Exception as e:
                 print(f"An error occurred: {e}")
                 return []
+            
+
+
+    @staticmethod
+    def get_journal_entry_by_balance_sheet_report(datefrom: Optional[str] = None, 
+                                              dateto: Optional[str] = None) -> List[Dict]:
+        with Session(engine) as session:
+            try:
+                # Start building the SQL statement
+                statement = select(
+                    ChartofAccount.chart_of_account,
+                    func.sum(JournalEntry.debit).label("debit"),
+                    func.sum(JournalEntry.credit).label("credit"),
+                    AccountType.account_type.label("account_type")  # Select account_type
+                ).join(
+                    JournalEntry,
+                    ChartofAccount.id == JournalEntry.account_code_id
+                ).join(
+                    AccountType,
+                    ChartofAccount.accoun_type_id == AccountType.id
+                )
+
+                # Add date filtering if provided
+                if datefrom and dateto:
+                    statement = statement.where(
+                        JournalEntry.transdate.between(datefrom, dateto)
+                    )
+
+                # Group by ChartofAccount.id and AccountType.account_type
+                statement = statement.group_by(ChartofAccount.id, AccountType.account_type)\
+                                    .order_by(ChartofAccount.chart_of_account_code)
+
+                # Execute the statement and fetch all results
+                results = session.execute(statement)
+                data = results.fetchall()
+                
+                return data
+
+            except Exception as e:
+                print(f"Error fetching journal entry data: {e}")
+                return []
+
+
             
     @staticmethod
     def get_journal_entry_by_one_table(datefrom: Optional[str] = None, 

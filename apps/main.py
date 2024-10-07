@@ -54,6 +54,9 @@ from apps.routes.accounting.purchase_routes import api_purchases
 from apps.routes.accounting.purchase_report import api_purchase_report
 
 
+from apps.routes.accounting.balance_sheet import api_balance_sheet
+
+
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
@@ -111,6 +114,9 @@ app.include_router(api_sales_report, tags=['Sales Report'])
 
 app.include_router(api_purchases, tags=['Purchases'])
 app.include_router(api_purchase_report)
+
+
+app.include_router(api_balance_sheet)
 
 
 # Mount Strawberry's GraphQL app onto FastAPI

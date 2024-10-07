@@ -3,9 +3,10 @@ from typing import Optional,List
 
 from datetime import date, datetime
 
+from apps.views.accounting.journal_entry_views import JournalEntryViews
 
-#from  ..database.mongodb import create_mongo_client
-#mydb = create_mongo_client()
+
+
 
 
 @strawberry.type
@@ -29,45 +30,149 @@ class EmployeeDetailsQuery:
     created: Optional[datetime] = None
     updated: Optional[str] = None
 
+@strawberry.type
+class BSDetailsQuery:
+   
+    chart_of_account: Optional[str] = None
+    amount: Optional[float] = None
+    account_type : Optional[str] = None
+
     
 
 @strawberry.type
 class Query:
     
+   
+    
     @strawberry.field
-    async def get_users(self) -> Optional[List[User]]:
-        result = mydb.login.find()
-        # Convert MongoDB cursor to a list of User objects
-        users = [User(fullname=user['fullname'], username=user['username'], password=user['password'], created=user['created']) for user in result]
-        return users
-
-    # Define a field to fetch a single user by username
-    @strawberry.field
-    async def get_user_by_username(self, username: str) -> Optional[User]:
-        user = mydb.login.find_one({"username": username})
-        if user:
-            return User(fullname=user['fullname'], username=user['username'], password=user['password'], created=user['created'])
-        else:
-            return None
+    def get_balance_sheet_details(
+        self, 
+        datefrom: Optional[str] = None, 
+        dateto: Optional[str] = None
+    ) -> List[BSDetailsQuery]:
+        data = JournalEntryViews.get_journal_entry_by_balance_sheet_report(datefrom, dateto)
         
+        # Ensure data is iterable
+        # print(data)
+        # print(data['account_type'])
+        account_type = []
+        details = []
+        for d in data:
+            d_data = {}
+            
+            if not d[3] in account_type:
+                account_type.append(d[3])
+                d_data['account_type'] = d[3] # i add
+                d_data['chart_account'] =  d[0]
+                d_data['debit'] = d[1]
+                d_data['credit'] = d[2]
+                details.append(d_data)
+            else:
+                d_data['account_type'] = d[3] # i add
+                d_data['chart_account'] =  d[0]
+                d_data['debit'] = d[1]
+                d_data['credit'] = d[2]
+                details.append(d_data)
 
-    @strawberry.field
-    async def get_all_employees(self) -> List[EmployeeDetailsQuery]:
-        employee_collection = mydb['employee']
-        employees = employee_collection.find()
+                # CurrentAsset: [
+                #     {
+                #     chart_of_ccount: cash,
+                #     debit: 0,
+                #     credit: 0
+                #     },
+                #                         {
+                #     chart_of_ccount: cash,
+                #     debit: 0,
+                #     credit: 0
+                #     }
+                # ],
+                # Liabilities: [
+                #                         {
+                #     chart_of_ccount: cash,
+                #     debit: 0,
+                #     credit: 0
+                #     },
+                #                         {
+                #     chart_of_ccount: cash,
+                #     debit: 0,
+                #     credit: 0
+                #     }
+                # ]
+        print(account_type)
+        print(details)
+        
+        # Filter details for "Current Asset" account type and print them
+        current_asset_details = [detail for detail in details if detail['account_type'] == 'Current Asset']
+        print("Current Asset Details:", current_asset_details)
 
-        return [
-            EmployeeDetailsQuery(
-                _id = employee.get('_id'),
-                employee_id=employee.get('employee_id'),
-                employee_name=employee.get('employee_name'),
-                division=employee.get('division'),
-                position=employee.get('position'),
-                status=employee.get('status'),
-                created=employee.get('created'),
-                updated=employee.get('updated')
-            ) for employee in employees
+        # Build and return the result
+        result = []
+
+        result = [
+            BSDetailsQuery(
+                chart_of_account=detail['chart_account'],
+                amount=detail['debit'] - detail['credit'],
+                account_type=detail['account_type']
+            )
+            for detail in current_asset_details
         ]
+        return result
+    
+    @strawberry.field
+    def get_balance_sheet_details2(
+        self, 
+        datefrom: Optional[str] = None, 
+        dateto: Optional[str] = None
+    ) -> List[BSDetailsQuery]:
+        data = JournalEntryViews.get_journal_entry_by_balance_sheet_report(datefrom, dateto)
+        
+        if not data:
+            return []
+
+        # Dictionary to group details by account type
+        account_type_details = {}
+
+        for d in data:
+            # Ensure that d contains the necessary elements
+            if len(d) < 4:
+                continue
+
+            # Unpack values and assign to respective fields
+            account_type = d[3]
+            chart_account = d[0]
+            debit = d[1]
+            credit = d[2]
+
+            # Initialize the list for each new account type
+            if account_type not in account_type_details:
+                account_type_details[account_type] = []
+
+            # Append details for each account type
+            account_type_details[account_type].append({
+                'chart_account': chart_account,
+                'debit': debit,
+                'credit': credit
+            })
+
+        # Flatten the details into a list of BSDetailsQuery objects
+        result = []
+        for account_type, details in account_type_details.items():
+            for detail in details:
+                result.append(
+                    BSDetailsQuery(
+                        chart_of_account=detail['chart_account'],
+                        amount=detail['debit'] - detail['credit'],
+                        account_type=account_type
+                    )
+                )
+
+        # Print for debugging purposes
+        print("Account Types:", account_type_details.keys())
+        print("Details by Account Type:", account_type_details)
+
+        return result
+
+        
         
     
 
