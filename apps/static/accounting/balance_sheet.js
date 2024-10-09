@@ -155,7 +155,7 @@ $(document).ready(function() {
             }),
             success: function(response) {
                 const data = response.data.getBalanceSheetDetails2;
-
+                console.log('EHLOOOOOO', data)
                 // Clear any previous data
                 $('#table_balance_sheet_report_list').empty();
 
@@ -164,16 +164,47 @@ $(document).ready(function() {
                     return;
                 }
 
-                // Generate and append rows to the table
+                const totals = {};
+
+                // First pass to calculate totals
                 data.forEach(item => {
+                    if (!totals[item.accountType]) {
+                        totals[item.accountType] = 0;
+                    }
+                    totals[item.accountType] += item.amount;
+                });
+
+                // Second pass to display the data
+                const displayedAccountTypes = [];
+
+                data.forEach(item => {
+                    const showAccountType = !displayedAccountTypes.includes(item.accountType);
+
+                    // Display account type and increment the displayed list
+                    if (showAccountType) {
+                        displayedAccountTypes.push(item.accountType);
+                    }
+
                     $('#table_balance_sheet_report_list').append(`
                         <tr>
-                            <td>${item.accountType}</td>
+                            <td>${showAccountType ? item.accountType : ''}</td>
                             <td>${item.chartOfAccount}</td>
                             <td>${item.amount.toFixed(2)}</td>
                         </tr>
                     `);
                 });
+
+                // Append total rows for each account type
+                for (const accountType in totals) {
+                    $('#table_balance_sheet_report_list').append(`
+                        <tr>
+                            <td><strong>Total ${accountType}</strong></td>
+                            <td></td>
+                            <td><strong>${totals[accountType].toFixed(2)}</strong></td>
+                        </tr>
+                    `);
+                }
+
             },
             error: function(error) {
                 console.error('Error fetching data:', error);
@@ -181,4 +212,14 @@ $(document).ready(function() {
             }
         });
     });
+
+    function groupDataByAccountType(data) {
+        return data.reduce((acc, item) => {
+            if (!acc[item.accountType]) {
+                acc[item.accountType] = [];
+            }
+            acc[item.accountType].push(item);
+            return acc;
+        }, {});
+    }
 });
