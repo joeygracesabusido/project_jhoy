@@ -37,6 +37,13 @@ class BSDetailsQuery:
     amount: Optional[float] = None
     account_type : Optional[str] = None
 
+
+
+@strawberry.type
+class AccountTypeDetails:
+    account_type: str
+    details: List[BSDetailsQuery]
+
     
 
 @strawberry.type
@@ -171,10 +178,56 @@ class Query:
         print("Details by Account Type:", account_type_details)
 
         return result
+    
+    @strawberry.field
+    def get_balance_sheet_details3(
+        self, 
+        datefrom: Optional[str] = None, 
+        dateto: Optional[str] = None
+    ) -> List[AccountTypeDetails]:
+        data = JournalEntryViews.get_journal_entry_by_balance_sheet_report(datefrom, dateto)
+        
+        if not data:
+            return []
+
+        account_type_details = {}
+
+        for d in data:
+            if len(d) < 4:
+                continue
+
+            account_type = d[3]
+            chart_account = d[0]
+            debit = d[1]
+            credit = d[2]
+
+            if account_type not in account_type_details:
+                account_type_details[account_type] = []
+
+            account_type_details[account_type].append(
+                BSDetailsQuery(
+                    chart_of_account=chart_account,
+                    amount=debit - credit,
+                    account_type=account_type
+                )
+            )
+
+        result = [
+            AccountTypeDetails(
+                account_type=account_type,
+                details=details
+            )
+            for account_type, details in account_type_details.items()
+        ]
+
+        return result
 
         
+
+
+            
+            
         
-    
 
 
 
