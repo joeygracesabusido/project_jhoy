@@ -45,33 +45,43 @@ async def insert_journal_entry(request: Request,username: str = Depends(get_curr
     branch_id = form.get('branch_id')
 
     # If a previous reference number exists, increment it
-    if journal_type == 'General Ledger' and reference is not None:
-        reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
-        if reference_no:
-            # Extract the last number from the reference
-            ref_no = reference_no.reference  # Access the 'reference' field from the object
-            last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
-            
-            # Generate the new reference number by incrementing the last number
-            reference = f" GL-{current_year}-{last_number + 1}"
+    if journal_type == 'General Ledger':
+        if reference is not None and reference != '':
+        # If reference has a value, retain its value
+            reference = reference
         else:
-            # If no reference exists, start with '1'
-            reference = f" GL-{current_year}-1"
+            reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
+            if reference_no:
+                # Extract the last number from the reference
+                ref_no = reference_no.reference  # Access the 'reference' field from the object
+                last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
+                
+                # Generate the new reference number by incrementing the last number
+                reference = f" GL-{current_year}-{last_number + 1}"
+            else:
+                # If no reference exists, start with '1'
+                reference = f" GL-{current_year}-1"
 
     # this is for selecting General Ledger
-    elif journal_type == 'Journal Voucher' and reference is not None:
-        reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
-
-        if reference_no:
-            # Extract the last number from the reference
-            ref_no = reference_no.reference  # Access the 'reference' field from the object
-            last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
-            
-            # Generate the new reference number by incrementing the last number
-            reference = f" JV-{current_year}-{last_number + 1}"
+    elif journal_type == 'Journal Voucher':
+        if reference is not None and reference != '':
+        # If reference has a value, retain its value
+            reference = reference
         else:
-            # If no reference exists, start with '1'
-            reference = f" JV-{current_year}-1"
+            reference_no = JournalEntryViews.get_journal_entry_by_journal_type(journal_type=journal_type)
+        
+            if reference_no:
+                # Extract the last number from the reference
+                ref_no = reference_no.reference  # Access the 'reference' field from the object
+                last_number = int(ref_no.split('-')[-1])  # Extract the last number and convert to int
+                
+                # Generate the new reference number by incrementing the last number
+                reference = f" JV-{current_year}-{last_number + 1}"
+            else:
+                # If no reference exists, start with '1'
+                reference = f" JV-{current_year}-1"
+
+    
             
 
     account_title = []
@@ -269,3 +279,6 @@ async def update_journal_entry(ref: str, request: Request, username: str = Depen
             
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+

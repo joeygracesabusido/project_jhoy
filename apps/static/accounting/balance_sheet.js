@@ -225,83 +225,155 @@
 // });
 
 
+// $(document).ready(function() {
+//     $('#btn_search').on('click', function() {
+//         const datefrom = $('#date_from').val();
+//         const dateto = $('#date_to').val();
+
+//         $.ajax({
+//             url: '/graphql', // Replace this with your actual GraphQL endpoint
+//             method: 'POST',
+//             contentType: 'application/json',
+//             data: JSON.stringify({
+//                 query: `
+//                 query {
+//                     getBalanceSheetDetails3(datefrom: "${datefrom}", dateto: "${dateto}") {
+//                         accountType
+//                         details {
+//                             chartOfAccount
+//                             amount
+//                         }
+//                     }
+//                 }`
+//             }),
+//             success: function(response) {
+//                 const data = response.data.getBalanceSheetDetails3;
+//                 $('#table_balance_sheet_report_list').empty();
+
+//                 if (!data || data.length === 0) {
+//                     $('#table_balance_sheet_report_list').html('<tr><td colspan="3">No data found for the selected date range.</td></tr>');
+//                     return;
+//                 }
+
+//                 const totals = {};
+
+//                 // Loop through each account type and its details
+//                 data.forEach(item => {
+//                     if (!totals[item.accountType]) {
+//                         totals[item.accountType] = 0;
+//                     }
+
+//                     // Display each detail for the account type
+//                     item.details.forEach(detail => {
+//                         totals[item.accountType] += detail.amount;
+
+//                         $('#table_balance_sheet_report_list').append(`
+//                             <tr>
+//                                 <td>${item.accountType}</td>
+//                                 <td>${detail.chartOfAccount}</td>
+//                                 <td>${detail.amount.toFixed(2)}</td>
+//                             </tr>
+//                         `);
+//                     });
+//                 });
+
+//                 // Append total rows for each account type
+//                 for (const accountType in totals) {
+//                     $('#table_balance_sheet_report_list').append(`
+//                         <tr>
+//                             <td><strong>Total ${accountType}</strong></td>
+//                             <td></td>
+//                             <td><strong>${totals[accountType].toFixed(2)}</strong></td>
+//                         </tr>
+//                     `);
+//                 }
+//             },
+//             error: function(error) {
+//                 console.error('Error fetching data:', error);
+//                 $('#table_balance_sheet_report_list').html('<tr><td colspan="3">An error occurred while fetching data.</td></tr>');
+//             }
+//         });
+//     });
+
+//     function groupDataByAccountType(data) {
+//         return data.reduce((acc, item) => {
+//             if (!acc[item.accountType]) {
+//                 acc[item.accountType] = [];
+//             }
+//             acc[item.accountType].push(item);
+//             return acc;
+//         }, {});
+//     }
+// });
+
+
 $(document).ready(function() {
     $('#btn_search').on('click', function() {
         const datefrom = $('#date_from').val();
         const dateto = $('#date_to').val();
+        // Replace this URL with your actual GraphQL endpoint
+        const endpoint = '/graphql';
 
+        // Define your GraphQL query for fetching balance sheet details
+        const query = `
+            query {
+                getBalanceSheetDetails3(datefrom: "${datefrom}", dateto: "${dateto}") {
+                    accountType
+                    details {
+                        chartOfAccount
+                        amount
+                    }
+                }
+            }
+        `;
+
+        // Fetch the data using jQuery's AJAX method
         $.ajax({
-            url: '/graphql', // Replace this with your actual GraphQL endpoint
+            url: endpoint,
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({
-                query: `
-                query {
-                    getBalanceSheetDetails3(datefrom: "${datefrom}", dateto: "${dateto}") {
-                        accountType
-                        details {
-                            chartOfAccount
-                            amount
-                        }
-                    }
-                }`
-            }),
+            data: JSON.stringify({ query }),
             success: function(response) {
                 const data = response.data.getBalanceSheetDetails3;
-                $('#table_balance_sheet_report_list').empty();
 
-                if (!data || data.length === 0) {
-                    $('#table_balance_sheet_report_list').html('<tr><td colspan="3">No data found for the selected date range.</td></tr>');
-                    return;
-                }
-
-                const totals = {};
+                // Initialize table HTML
+                let reportTable = `<table class="table table-striped table-bordered">
+                                      <thead>
+                                          <tr>
+                                              <th>Account Type</th>
+                                              <th>Amount</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>`;
 
                 // Loop through each account type and its details
-                data.forEach(item => {
-                    if (!totals[item.accountType]) {
-                        totals[item.accountType] = 0;
-                    }
+                data.forEach(account => {
+                    const accountType = account.accountType;
 
-                    // Display each detail for the account type
-                    item.details.forEach(detail => {
-                        totals[item.accountType] += detail.amount;
+                    // Add a row for the account type header
+                    reportTable += `<tr>
+                                        <td colspan="2"><strong>${accountType}</strong></td>
+                                    </tr>`;
 
-                        $('#table_balance_sheet_report_list').append(`
-                            <tr>
-                                <td>${item.accountType}</td>
-                                <td>${detail.chartOfAccount}</td>
-                                <td>${detail.amount.toFixed(2)}</td>
-                            </tr>
-                        `);
+                    // Loop through each detail within the account type
+                    account.details.forEach(detail => {
+                        reportTable += `<tr>
+                                            <td>${detail.chartOfAccount}</td>
+                                            <td>${detail.amount.toFixed(2)}</td>
+                                        </tr>`;
                     });
                 });
 
-                // Append total rows for each account type
-                for (const accountType in totals) {
-                    $('#table_balance_sheet_report_list').append(`
-                        <tr>
-                            <td><strong>Total ${accountType}</strong></td>
-                            <td></td>
-                            <td><strong>${totals[accountType].toFixed(2)}</strong></td>
-                        </tr>
-                    `);
-                }
+                // Close the table
+                reportTable += '</tbody></table>';
+
+                // Append the table to the container
+                $('#balanceSheetReport').html(reportTable);
             },
             error: function(error) {
                 console.error('Error fetching data:', error);
-                $('#table_balance_sheet_report_list').html('<tr><td colspan="3">An error occurred while fetching data.</td></tr>');
+                $('#balanceSheetReport').html('<p class="text-danger">Failed to load the report. Please try again later.</p>');
             }
         });
     });
-
-    function groupDataByAccountType(data) {
-        return data.reduce((acc, item) => {
-            if (!acc[item.accountType]) {
-                acc[item.accountType] = [];
-            }
-            acc[item.accountType].push(item);
-            return acc;
-        }, {});
-    }
 });

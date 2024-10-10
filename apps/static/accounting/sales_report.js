@@ -124,6 +124,7 @@ $(document).ready(function() {
                             '<td>' + entry.customer + '</td>' +
                             '<td>' + entry.tin + '</td>' +
                             '<td>' + entry.tax_type + '</td>' +
+                            '<td>' + entry.reference + '</td>' +
                             '<td>' + entry.chart_of_account + '</td>' +
                             '<td>' + entry.description + '</td>' +
                             '<td>' + entry.debit_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</td>' +
@@ -177,7 +178,10 @@ const initializeDataTable2 = () => {
             exportOptions: {
                 columns: ':visible' // Export only visible columns
             }
-        }]
+        }],
+
+        responsive: true,  // Makes the table responsive within the card
+        autoWidth: false,  // Disables automatic column width adjustment for better fit
     });
 
 

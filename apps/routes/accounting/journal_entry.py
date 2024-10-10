@@ -113,6 +113,17 @@ async def api_get_trialBalance(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@api_journale_entry.delete("/api-delete-journal-entry-temp/{ref}", response_class=HTMLResponse)
+async def delete_journal_entry(ref: str, request: Request, username: str = Depends(get_current_user)):
+
+    try:
+       
+        JournalEntryViews.delete_journal_entry_by_ref(reference=ref)
+        return('Data has been deleted')
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 
 
 

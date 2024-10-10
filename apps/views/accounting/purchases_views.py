@@ -113,7 +113,7 @@ class PurchaseViews(): # this class is for Customer
                     {
                         "date": journal.transdate,
                         "branch": branch.branch_name,
-                        
+                        "reference": journal.reference,
                         "customer": customer.bussiness_name,
                         "tin": customer.tin,
                         "tax_type": customer.tax_type,
