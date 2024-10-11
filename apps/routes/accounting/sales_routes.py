@@ -64,7 +64,7 @@ async def api_sales_transaction(request: Request,
             #  reference = f" Sales-{current_year}-{last_number + 1}"
          else:
              # If no reference exists, start with '1'
-             reference = f" Sales-{current_year}-1"
+             reference = f"Sales-{current_year}-1"
     
             
 

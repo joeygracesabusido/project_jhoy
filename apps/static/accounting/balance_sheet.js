@@ -307,14 +307,99 @@
 // });
 
 
+// 
+
+
+// Function to format number with thousand separator
+function formatNumberWithSeparator(value) {
+    return parseFloat(value).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// $(document).ready(function() {
+//     $('#btn_search').on('click', function() {
+//         const datefrom = $('#date_from').val();
+//         const dateto = $('#date_to').val();
+//         const endpoint = '/graphql';
+
+//         const query = `
+//             query {
+//                 getBalanceSheetDetails3(datefrom: "${datefrom}", dateto: "${dateto}") {
+//                     accountType
+//                     details {
+//                         chartOfAccount
+//                         amount
+//                     }
+//                 }
+//             }
+//         `;
+
+//         $.ajax({
+//             url: endpoint,
+//             method: 'POST',
+//             contentType: 'application/json',
+//             data: JSON.stringify({ query }),
+//             success: function(response) {
+//                 const data = response.data.getBalanceSheetDetails3;
+
+//                 let reportTable = `<table class="table table-striped table-bordered">
+//                                       <thead>
+//                                           <tr>
+//                                               <th>BALANCE SHEET</th>
+//                                               <th>Amount</th>
+//                                           </tr>
+//                                       </thead>
+//                                       <tbody>`;
+
+//                 data.forEach(account => {
+//                     const accountType = account.accountType;
+//                     let totalAmount = 0;
+
+//                     reportTable += `<tr>
+//                                         <td colspan="2" ><strong>${accountType}</strong></td>
+//                                     </tr>`;
+
+//                     account.details.forEach(detail => {
+//                         const amount = detail.amount;
+//                         totalAmount += amount;
+//                         reportTable += `<tr>
+//                                             <td>${detail.chartOfAccount}</td>
+//                                             <td class="text-end">
+//                                                 ${formatNumberWithSeparator(amount)}
+//                                             </td>
+//                                         </tr>`;
+//                     });
+
+//                     // Add a row for the total amount of the account type
+//                     reportTable += `<tr>
+//                                         <td><strong>Total  ${accountType}</strong></td>
+//                                         <td class="text-end"><strong>
+//                                             ${formatNumberWithSeparator(totalAmount)}
+//                                         </strong></td>
+//                                     </tr>`;
+//                 });
+
+//                 reportTable += '</tbody></table>';
+
+//                 $('#balanceSheetReport').html(reportTable);
+//             },
+//             error: function(error) {
+//                 console.error('Error fetching data:', error);
+//                 $('#balanceSheetReport').html('<p class="text-danger">Failed to load the report. Please try again later.</p>');
+//             }
+//         });
+//     });
+// });
+
+// 
 $(document).ready(function() {
     $('#btn_search').on('click', function() {
         const datefrom = $('#date_from').val();
         const dateto = $('#date_to').val();
-        // Replace this URL with your actual GraphQL endpoint
         const endpoint = '/graphql';
 
-        // Define your GraphQL query for fetching balance sheet details
         const query = `
             query {
                 getBalanceSheetDetails3(datefrom: "${datefrom}", dateto: "${dateto}") {
@@ -327,7 +412,6 @@ $(document).ready(function() {
             }
         `;
 
-        // Fetch the data using jQuery's AJAX method
         $.ajax({
             url: endpoint,
             method: 'POST',
@@ -335,39 +419,126 @@ $(document).ready(function() {
             data: JSON.stringify({ query }),
             success: function(response) {
                 const data = response.data.getBalanceSheetDetails3;
-
-                // Initialize table HTML
+                console.log(data)
+                let totalAsset = 0;
+                let totalLiability = 0;
+                let totalLiability2 = 0;
+                let sales = 0;
+                let costOfSales = 0;
+                let generalAdmin = 0;
+                let totalCapital = 0; // Initialize total capital
                 let reportTable = `<table class="table table-striped table-bordered">
                                       <thead>
                                           <tr>
-                                              <th>Account Type</th>
+                                              <th>BALANCE SHEET</th>
                                               <th>Amount</th>
                                           </tr>
                                       </thead>
                                       <tbody>`;
 
-                // Loop through each account type and its details
-                data.forEach(account => {
-                    const accountType = account.accountType;
+                const assetTypes = ["Current Asset", "Non-Current Asset", "Property Plant and Equipment"];
+                const liabilityTypes = ["Current Liability", "Non-Current Liability"];
+                const excludeTypes = ["Sales", "Cost of Sales/Service", "General and Administrative Expense"];
+                
 
-                    // Add a row for the account type header
+
+                let withinAssets = false;
+                let withinLiabilities = false;
+                let withincapital = false;
+
+                data.forEach((account, index) => {
+                    const accountType = account.accountType;
+                    let totalAmount = 0;
+
+                    if (excludeTypes.includes(accountType)) {
+                        account.details.forEach(detail => {
+                            if (accountType === "Sales") {
+                                sales += detail.amount;
+                            } else if (accountType === "Cost of Sales/Service") {
+                                costOfSales += detail.amount;
+                            } else if (accountType === "General and Administrative Expense") {
+                                generalAdmin += detail.amount;
+                            }
+                        });
+                        return; // Skip further processing for excluded account types
+                    }
+
                     reportTable += `<tr>
                                         <td colspan="2"><strong>${accountType}</strong></td>
                                     </tr>`;
 
-                    // Loop through each detail within the account type
                     account.details.forEach(detail => {
+                        const amount = detail.amount;
+                        totalAmount += amount;
+
                         reportTable += `<tr>
                                             <td>${detail.chartOfAccount}</td>
-                                            <td>${detail.amount.toFixed(2)}</td>
+                                            <td class="text-end">
+                                                ${formatNumberWithSeparator(amount)}
+                                            </td>
                                         </tr>`;
                     });
+
+                    reportTable += `<tr>
+                                        <td><strong>Total ${accountType}</strong></td>
+                                        <td class="text-end"><strong>${formatNumberWithSeparator(totalAmount)}</strong></td>
+                                    </tr>`;
+
+                    // Accumulate totals for assets and liabilities
+                    if (assetTypes.includes(accountType)) {
+                        totalAsset += totalAmount;
+                        withinAssets = true;
+                        withinLiabilities = false;
+                        withincapital = false;
+                    } else if (liabilityTypes.includes(accountType)) {
+                        totalLiability += totalAmount;
+                        withinAssets = false;
+                        withinLiabilities = true;
+                        withincapital = false;
+                    } else {
+                        withinAssets = false;
+                        withinLiabilities = false;
+                        withincapital = true;
+                    }
+
+                    if (withinAssets && (index === data.length - 1 || !assetTypes.includes(data[index + 1].accountType))) {
+                        reportTable += `<tr class="table-active">
+                                            <td><strong>Total Asset</strong></td>
+                                            <td class="text-end"><strong>${formatNumberWithSeparator(totalAsset)}</strong></td>
+                                        </tr>`;
+                    }
+
+                    if (withinLiabilities && (index === data.length - 1 || !liabilityTypes.includes(data[index + 1].accountType))) {
+                        reportTable += `<tr class="table-active">
+                                            <td><strong>Total Liability</strong></td>
+                                            <td class="text-end"><strong>${formatNumberWithSeparator(totalLiability)}</strong></td>
+                                        </tr>`;
+                    }
+
+                    // Accumulate totals for assets, liabilities, and capital
+                    if (accountType === "Stock Holder's Equity") {
+                        // Extract the amount for Stock Holder's Equity
+                        stockHolderEquityAmount = totalAmount; // Assuming totalAmount represents the Stock Holder's Equity
+                    }
                 });
 
-                // Close the table
+                // Calculate retained earnings
+                const retainedEarnings = sales + generalAdmin + costOfSales;
+                const total_liability_capital = totalLiability + retainedEarnings + stockHolderEquityAmount
+                // Add retained earnings after liabilities
+                reportTable += `<tr class="table-active">
+                                    <td><strong>Retained Earnings</strong></td>
+                                    <td class="text-end"><strong>${formatNumberWithSeparator(retainedEarnings)}</strong></td>
+                                </tr>`;
+
+                // Add retained earnings after liabilities
+                reportTable += `<tr class="table-active">
+                                    <td><strong>Total Liabilities & Capital</strong></td>
+                                    <td class="text-end"><strong>${formatNumberWithSeparator(total_liability_capital)}</strong></td>
+                                </tr>`;
+
                 reportTable += '</tbody></table>';
 
-                // Append the table to the container
                 $('#balanceSheetReport').html(reportTable);
             },
             error: function(error) {
@@ -377,3 +548,6 @@ $(document).ready(function() {
         });
     });
 });
+
+
+

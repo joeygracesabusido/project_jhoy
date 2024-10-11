@@ -63,6 +63,29 @@ async def autocomplete_account_type(term: Optional[str] = None, username: str = 
         error_message = str(e)
         raise HTTPException(status_code=500, detail=error_message)
     
+@api_account_type.get("/api-account-type-list/")
+async def get_account_type(username: str = Depends(get_current_user)):
+    try:
+        # Retrieve all chart of account data from the database
+        account_type = TypeofAccountViews.get_account_type()
+        
+      
+        # Construct suggestions from filtered chart of account data
+        suggestions = [
+            {
+                "account_type": item.account_type,
+                "id": item.id,
+                
+            }
+            for item in account_type
+        ]
+
+        return suggestions
+
+    except Exception as e:
+        error_message = str(e)
+        raise HTTPException(status_code=500, detail=error_message)
+    
     
 
 
