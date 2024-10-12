@@ -208,6 +208,15 @@ class JournalEntryViews(): # this class is for Type of Account
                     ChartofAccount.accoun_type_id == AccountType.id
                 )
 
+				
+                #add filter for specific account types
+                specific_account_types = ["Sales", "Cost of Sales/Service", 
+                                           "General and Administrative Expense"]
+                statement = statement.where(
+                    AccountType.account_type.in_(specific_account_types)
+                )
+
+
                 # Add date filtering if provided
                 if datefrom and dateto:
                     statement = statement.where(
