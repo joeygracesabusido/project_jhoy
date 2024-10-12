@@ -1,5 +1,5 @@
 import strawberry
-from typing import Optional,List
+from typing import Optional,List, Dict
 
 from datetime import date, datetime
 
@@ -44,6 +44,19 @@ class AccountTypeDetails:
     account_type: str
     details: List[BSDetailsQuery]
 
+@strawberry.type
+class IncomeStatementEntry:
+    chart_of_account: str
+    debit: float
+    credit: float
+    amount: float
+
+@strawberry.type
+class IncomeStatement:
+    account_type: str
+    entries: List[IncomeStatementEntry] 
+   
+    
     
 
 @strawberry.type
@@ -221,6 +234,91 @@ class Query:
         ]
 
         return result
+    
+    # @strawberry.field
+    # def get_income_statement_report(
+    #     self, 
+    #     datefrom: Optional[str] = None, 
+    #     dateto: Optional[str] = None
+    # ) -> List[IncomeStatement]:
+        
+
+    #     data = JournalEntryViews.get_income_statement(datefrom, dateto)
+
+    #     grouped_data = {}
+
+    #     # Populate the grouped_data with entries
+    #     for row in data:
+    #         account_type = row[3]  # Assuming this is the account type
+    #         chart_of_account = row[0]
+    #         debit = row[1]
+    #         credit = row[2]
+    #         amount = debit - credit
+
+    #          # Initialize the list if the account_type key does not exist
+    #         if account_type not in grouped_data:
+    #             grouped_data[account_type] = []
+
+    #         # Append the entry to the corresponding account type
+    #         grouped_data[account_type].append({
+    #             "chart_of_account": chart_of_account,
+    #             "amount": amount,
+    #         })
+
+    #         # Convert the grouped data into a list of IncomeStatement
+    #         return [
+    #             IncomeStatement(
+    #                 account_type=account_type,
+    #                 entries=entries
+    #             ) for account_type, entries in grouped_data.items()
+    #     ]
+
+    #     # return [
+    #     #             IncomeStatement(
+    #     #                 account_type=row[3],
+    #     #                 chart_of_account=row[0],
+    #     #                 amount = row[1] - row[2]
+                        
+    #     #             ) for row in data
+    #     #         ]
+    @strawberry.field
+    def get_income_statement_report(
+        self, 
+        datefrom: Optional[str] = None, 
+        dateto: Optional[str] = None
+    ) -> List[IncomeStatement]:
+        
+        data = JournalEntryViews.get_income_statement(datefrom, dateto)
+
+        grouped_data = {}
+
+        # Populate the grouped_data with entries
+        for row in data:
+            account_type = row[3]  # Assuming this is the account type
+            chart_of_account = row[0]
+            debit = row[1]
+            credit = row[2]
+            amount = credit - debit
+
+            # Initialize the list if the account_type key does not exist
+            if account_type not in grouped_data:
+                grouped_data[account_type] = []
+
+            # Append the entry to the corresponding account type
+            grouped_data[account_type].append(IncomeStatementEntry(  # Change to use the class
+                chart_of_account=chart_of_account,
+                debit=debit,
+                credit=credit,
+                amount=amount,
+            ))
+
+        # Convert the grouped data into a list of IncomeStatement
+        return [
+            IncomeStatement(
+                account_type=account_type,
+                entries=entries
+            ) for account_type, entries in grouped_data.items()
+        ]
 
         
 
