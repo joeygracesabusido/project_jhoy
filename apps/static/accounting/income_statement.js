@@ -115,10 +115,17 @@ $(document).ready(function() {
     });
 
   // Print functionality
-  $('#btn_print').on('click', function() {
+  $("#btn_print").on("click", function () {
     // Ensure the report is rendered before printing
-    setTimeout(function() {
-        window.print(); // Trigger the print dialog
+    setTimeout(function () {
+      const content = document.getElementById(
+        "incomeStatementReport"
+      ).innerHTML;
+      const originalContent = document.body.innerHTML;
+
+      document.body.innerHTML = content;
+      window.print();
+      document.body.innerHTML = originalContent;
     }, 500); // Adjust delay if necessary
-});
+  });
 });
